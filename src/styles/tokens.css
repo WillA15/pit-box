@@ -1,0 +1,30 @@
+/* Design tokens. Loosely based on Fast Lap's broadcast look; swap freely when the
+   Claude Design pass happens. Components only ever reference these variables. */
+:root {
+  --bg: #08090c;
+  --surface: #12141a;
+  --surface-raised: #1a1d25;
+  --line: #262a34;
+  --text: #f4f5f7;
+  --muted: #9aa1ad;
+  --accent: #e10600;
+  --accent-2: #00d2be;
+  --sprint: #ffc53d;
+  --good: #3ddc84;
+  --bad: #ff5c5c;
+
+  --tyre-soft: #ff3333;
+  --tyre-medium: #ffd400;
+  --tyre-hard: #f0f0f0;
+  --tyre-inter: #39b54a;
+  --tyre-wet: #2b7fff;
+  --tyre-unknown: #666b75;
+
+  --font-head: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+  --font-body: 'Barlow', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --radius: 6px;
+  --gap: 16px;
+  --wrap: 1180px;
+  --skew: -12deg;
+}

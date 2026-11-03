@@ -1,0 +1,19 @@
+import { useSeason } from '../lib/useSeason.js';
+import { Loading, LoadError, SourceNote } from '../components/Status.jsx';
+
+export default function Drivers() {
+  const { data, error, loading } = useSeason();
+  return (
+    <section className="page">
+      <h1>Driver Spotlight</h1>
+      {loading && <Loading />}
+      {error && <LoadError error={error} />}
+      {data && (
+        <>
+          <p className="muted">Driver profiles and news arrive in stage 4.</p>
+          <SourceNote data={data} />
+        </>
+      )}
+    </section>
+  );
+}
