@@ -1,4 +1,5 @@
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { useEffect } from 'react';
 import './Layout.css';
 
@@ -30,7 +31,13 @@ export default function Layout() {
               {TABS.map((t) => (
                 <li key={t.to}>
                   <NavLink to={t.to} className={({ isActive }) => `tab${isActive ? ' tab--active' : ''}`}>
-                    {t.label}
+                    {({ isActive }) => (
+                      <>
+                        {t.label}
+                        {/* One underline that slides between tabs. */}
+                        {isActive && <motion.span className="tab__bar" layoutId="tab-bar" transition={{ type: 'spring', stiffness: 400, damping: 34 }} />}
+                      </>
+                    )}
                   </NavLink>
                 </li>
               ))}
@@ -39,7 +46,10 @@ export default function Layout() {
         </div>
       </header>
       <main id="main" className="wrap">
-        <Outlet />
+        {/* Each page eases in when you change tab (enter-only, so navigation never waits). */}
+        <motion.div key={pathname.split('/')[1] || 'home'} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, ease: 'easeOut' }}>
+          <Outlet />
+        </motion.div>
       </main>
       <footer className="site-footer">
         <div className="wrap">

@@ -1,0 +1,16 @@
+.landing { gap: 20px; padding-top: 0; }
+.landing__fights, .landing__row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: stretch; }
+.landing__next { display: grid; gap: 8px; align-content: start; border-left: 6px solid var(--accent); }
+.landing__next .tag + .tag { margin-left: 6px; }
+.landing__next h2 { margin: 4px 0 0; font-style: italic; font-size: 1.9rem; }
+.landing__next p { margin: 0 0 6px; }
+.landing__actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
+.landing__links { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 10px; }
+.landing__link { display: grid; gap: 4px; height: 100%; padding: 16px; text-decoration: none; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); transition: transform 0.25s, border-color 0.25s; }
+.landing__link:hover { transform: translateY(-3px); border-color: var(--accent); }
+.landing__icon { font-size: 1.6rem; line-height: 1; height: 34px; display: flex; align-items: center; }
+.landing__link b { font: italic 800 1.15rem/1 var(--font-head); text-transform: uppercase; }
+.landing__link small { font-size: 0.82rem; }
+.landing__foot { display: flex; flex-wrap: wrap; gap: 4px 14px; }
+.landing__foot p { margin: 0; }
+@media (max-width: 860px) { .landing__fights, .landing__row { grid-template-columns: 1fr; } }

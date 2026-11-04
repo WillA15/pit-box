@@ -110,3 +110,23 @@ describe('championClinch', () => {
     expect(pointsRemaining([{ round: 2, sprint: true }], 1, 'constructors')).toBe(58);
   });
 });
+
+import { titleFight } from '../../src/lib/standingsHistory.js';
+
+describe('titleFight (real 2026 snapshot)', () => {
+  const h = computeStandingsHistory(season.races);
+  it('drivers: decided, nobody can catch the leader', () => {
+    const f = titleFight(h, season.races, 'drivers');
+    expect(f.decided).toBe(true);
+    expect(f.leader.id).toBe('antonelli');
+    expect(f.rivals.every((r) => !r.alive)).toBe(true);
+    expect(f.rivals[0].gap).toBe(f.leader.points - f.rivals[0].points);
+  });
+  it('constructors: still open, with points remaining for a team', () => {
+    const f = titleFight(h, season.races, 'constructors');
+    expect(f.decided).toBe(false);
+    expect(f.rivals[0].alive).toBe(true);
+    expect(f.remaining).toBe(pointsRemaining(season.races, f.round, 'constructors'));
+    expect(f.racesLeft).toBe(season.races.filter((r) => r.round > f.round).length);
+  });
+});

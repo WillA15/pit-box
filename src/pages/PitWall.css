@@ -13,6 +13,8 @@
   display: grid; gap: 10px; padding: 16px; border-radius: var(--radius); border: 1px solid var(--line); border-top: 4px solid var(--team);
   background: linear-gradient(160deg, color-mix(in srgb, var(--team) 16%, var(--surface)) 0%, var(--surface) 55%);
 }
+.pw-card { transition: transform 0.25s, box-shadow 0.25s; }
+.pw-card:hover { transform: translateY(-3px); box-shadow: 0 12px 30px -14px var(--team); }
 .pw-card__head { display: flex; justify-content: space-between; align-items: start; gap: 8px; }
 .pw-card__name { display: block; font: italic 800 1.35rem/1.05 var(--font-head); text-transform: uppercase; text-decoration: none; }
 a.pw-card__name:hover { color: var(--accent); }

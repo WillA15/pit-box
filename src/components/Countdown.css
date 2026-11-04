@@ -4,3 +4,5 @@
 .countdown__unit b { display: block; font: 800 1.8rem/1 var(--font-head); font-variant-numeric: tabular-nums; }
 .countdown__unit small { color: var(--muted); font: 600 0.7rem/1 var(--font-head); }
 .countdown__done { color: var(--accent); font: 800 1.2rem/1 var(--font-head); text-transform: uppercase; }
+.countdown__digits { display: block; position: relative; overflow: hidden; height: 1.8rem; perspective: 300px; }
+.countdown__digits span { display: block; }

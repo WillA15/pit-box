@@ -1,0 +1,37 @@
+.hero {
+  position: relative; overflow: hidden; margin-top: 24px; padding: 34px 28px 46px; border-radius: var(--radius);
+  background: radial-gradient(120% 140% at 0% 0%, color-mix(in srgb, var(--accent) 24%, var(--surface)) 0%, var(--surface) 55%, var(--bg) 100%);
+  border: 1px solid var(--line);
+}
+/* Speed lines streaming right-to-left behind the text. */
+.hero__speed {
+  position: absolute; inset: 0; opacity: 0.35; pointer-events: none;
+  background:
+    repeating-linear-gradient(180deg, transparent 0 22px, rgba(255, 255, 255, 0.05) 22px 23px),
+    linear-gradient(90deg, transparent 0 60%, rgba(255, 255, 255, 0.05) 60% 61%, transparent 61%);
+  background-size: 100% 100%, 260px 100%;
+  animation: hero-speed 0.9s linear infinite paused;
+}
+.hero--go .hero__speed { animation-play-state: running; }
+@keyframes hero-speed { from { background-position: 0 0, 0 0; } to { background-position: 0 0, -260px 0; } }
+
+.hero__lights { position: relative; display: flex; gap: 10px; margin-bottom: 10px; }
+.hero__pod { display: grid; gap: 6px; padding: 7px; background: #050505; border-radius: 6px; border: 1px solid #222; }
+.hero__pod i { display: block; width: 22px; height: 22px; border-radius: 50%; background: #1b0707; box-shadow: inset 0 0 6px #000; transition: background 0.08s, box-shadow 0.08s; }
+.hero__pod i.on { background: #ff1e1e; box-shadow: 0 0 14px 3px rgba(255, 30, 30, 0.75), inset 0 0 4px #ffb3b3; }
+.hero__status { position: relative; margin: 0 0 18px; font: 600 0.75rem/1 var(--font-head); text-transform: uppercase; letter-spacing: 0.18em; color: var(--muted); min-height: 1em; }
+.hero__text { position: relative; }
+.hero__text h1 { font-size: clamp(2.2rem, 6vw, 4.4rem); margin: 12px 0 8px; }
+.hero__text h1 span { color: var(--accent); }
+.hero__text p { margin: 0; max-width: 60ch; color: var(--muted); font-size: 1.05rem; }
+/* Chequered kerb along the bottom edge. */
+.hero__kerb {
+  position: absolute; left: 0; right: 0; bottom: 0; height: 14px;
+  background: conic-gradient(#fff 25%, #111 0 50%, #fff 0 75%, #111 0) 0 0 / 14px 14px;
+  opacity: 0.85;
+}
+@media (max-width: 560px) {
+  .hero { padding: 24px 18px 40px; }
+  .hero__pod i { width: 16px; height: 16px; }
+  .hero__lights { gap: 6px; }
+}

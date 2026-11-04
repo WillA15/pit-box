@@ -130,3 +130,33 @@ export function interpolateStandings(history, kind, t) {
     .sort((x, y) => y.points - x.points || bOrder.get(x.id) - bOrder.get(y.id))
     .map((r, k) => ({ ...r, pos: k + 1 }));
 }
+
+/**
+ * The state of a title fight after the latest round: the leader, and for each rival how far
+ * behind they are and the most they could still finish on. A rival is still "alive" only if
+ * their maximum possible total beats the leader's current total.
+ */
+export function titleFight(history, races, kind, { rivals = 3 } = {}) {
+  const round = history.rounds.at(-1);
+  const rows = history[kind][round] ?? [];
+  const remaining = pointsRemaining(races, round, kind);
+  const [leader, ...rest] = rows;
+  if (!leader) return null;
+  const clinch = championClinch(history, races, kind);
+  const racesLeft = races.filter((r) => r.round > round).length;
+  return {
+    round,
+    remaining,
+    racesLeft,
+    decided: Boolean(clinch),
+    clinchRound: clinch?.round ?? null,
+    leader: { id: leader.id, points: leader.points },
+    rivals: rest.slice(0, rivals).map((r) => ({
+      id: r.id,
+      points: r.points,
+      gap: leader.points - r.points,
+      maxPossible: r.points + remaining,
+      alive: r.points + remaining > leader.points,
+    })),
+  };
+}

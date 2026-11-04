@@ -1,0 +1,21 @@
+.gap-meter { display: grid; gap: 12px; }
+.gap-meter__head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px; }
+.gap-meter__head h2 { margin: 0; }
+.gap-meter__status { font: 600 0.82rem/1.2 var(--font-head); text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); display: inline-flex; align-items: center; gap: 6px; }
+.gap-meter__status.is-decided { color: #f5b301; }
+.gap-meter__rows { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.gap-meter__row { display: grid; grid-template-columns: 7.5rem 1fr 4rem; gap: 10px; align-items: center; }
+.gap-meter__row.is-out { opacity: 0.55; }
+.gap-meter__name { font: 800 1rem/1 var(--font-head); text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.gap-meter__track { position: relative; height: 22px; background: var(--bg); border-radius: 3px; overflow: hidden; }
+.gap-meter__bar { position: absolute; inset: 0 auto 0 0; background: linear-gradient(90deg, color-mix(in srgb, var(--team) 60%, transparent), var(--team)); border-radius: 3px; }
+.gap-meter__possible { position: absolute; inset: 0 auto 0 0; border-radius: 3px; background: repeating-linear-gradient(135deg, color-mix(in srgb, var(--team) 35%, transparent) 0 5px, transparent 5px 9px); }
+.gap-meter__line { position: absolute; top: -3px; bottom: -3px; width: 2px; margin-left: -1px; background: var(--text); box-shadow: 0 0 6px var(--text); }
+.gap-meter__pts { text-align: right; display: grid; line-height: 1.05; }
+.gap-meter__pts b { font: 800 1.15rem/1 var(--font-head); font-variant-numeric: tabular-nums; }
+.gap-meter__pts small { font-size: 0.72rem; color: var(--muted); }
+.gap-meter__legend { margin: 0; font-size: 0.75rem; display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: center; }
+.gap-meter__legend i { display: inline-block; width: 16px; height: 8px; margin-right: 4px; background: var(--accent); vertical-align: middle; border-radius: 2px; }
+.gap-meter__legend i.is-possible { background: repeating-linear-gradient(135deg, color-mix(in srgb, var(--accent) 45%, transparent) 0 3px, transparent 3px 6px); }
+.gap-meter__legend i.is-line { width: 2px; height: 12px; background: var(--text); }
+@media (max-width: 560px) { .gap-meter__row { grid-template-columns: 5.5rem 1fr 3.4rem; gap: 8px; } }
