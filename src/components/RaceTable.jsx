@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { buildRaceRows, sortRows, resultLabel } from '../lib/raceTable.js';
 import { teamColor } from '../lib/teams.js';
 import { useBookmarks } from '../lib/useBookmarks.js';
@@ -35,6 +35,7 @@ const COLUMNS = {
 export default function RaceTable({ season, results, detail, variant = 'race', caption }) {
   const [sort, setSort] = useState({ key: 'pos', dir: 'asc' });
   const { followLevel } = useBookmarks();
+  const navigate = useNavigate();
   const rows = sortRows(buildRaceRows(results, detail?.strategies), sort.key, sort.dir);
   const totalLaps = detail?.totalLaps ?? Math.max(0, ...results.map((r) => r.laps ?? 0));
   const cols = COLUMNS[variant];
@@ -90,9 +91,12 @@ export default function RaceTable({ season, results, detail, variant = 'race', c
             return (
               <tr
                 key={r.driverId}
-                className={`${level === 'driver' ? 'is-followed' : level === 'team' ? 'is-team-followed' : ''}${r.classified ? '' : ' is-out'}`}
+                className={`rt-row${r.classified ? '' : ' is-out'}`}
                 style={{ '--team': teamColor(r.constructorId) }}
                 data-testid="race-row"
+                // The whole row opens the driver's profile; the name link does the same for keyboards,
+                // and the follow button keeps working on its own.
+                onClick={(e) => { if (!e.target.closest('a, button')) navigate(`/drivers/${r.driverId}`); }}
               >
                 <td className="rt-pos">
                   <b>{resultLabel(r)}</b>
@@ -103,6 +107,16 @@ export default function RaceTable({ season, results, detail, variant = 'race', c
                     {/* Trophy first, so a winner who also set the fastest lap shows 🏆 then ⏱. */}
                     {r.isWinner && <Trophy title={`${session} winner`} size={16} />}
                     {r.isFastest && <FastestLapIcon title={`Fastest lap of the ${session.toLowerCase()}`} size={16} />}
+                    {level && (
+                      <span
+                        className={`rt-fav rt-fav--${level}`}
+                        role="img"
+                        aria-label={level === 'driver' ? 'You follow this driver' : 'You follow this team'}
+                        title={level === 'driver' ? 'You follow this driver' : `You follow ${season.constructors[r.constructorId]?.name}`}
+                      >
+                        ★
+                      </span>
+                    )}
                   </span>
                   <small className="muted">{season.constructors[r.constructorId]?.name}{!r.classified && r.status ? ` · ${r.status}` : ''}</small>
                 </td>

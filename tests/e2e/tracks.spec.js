@@ -111,7 +111,10 @@ test('unknown round shows a friendly message', async ({ page }) => {
 test('followed drivers are highlighted in the results', async ({ page }) => {
   await page.goto('/tracks/19');
   await page.getByRole('button', { name: 'Follow Max Verstappen' }).click();
-  await expect(page.getByTestId('race-row').filter({ hasText: 'Max Verstappen' })).toHaveClass(/is-followed/);
+  const row = page.getByTestId('race-row').filter({ hasText: 'Max Verstappen' });
+  await expect(row.getByRole('img', { name: 'You follow this driver' })).toBeVisible();
+  // No yellow outline any more: just the star.
+  await expect(row).not.toHaveClass(/is-followed/);
 });
 
 test('track maps and thumbnails draw the pit lane in its own colour', async ({ page }) => {
@@ -128,4 +131,36 @@ test('track maps and thumbnails draw the pit lane in its own colour', async ({ p
   await expect(page.getByTestId('track-card')).toHaveCount(23);
   // Thumbnails fill in once circuits.json arrives.
   await expect.poll(() => page.locator('.track-card .track-map__pit').count()).toBe(23);
+});
+
+test('hovering a result row lifts it and clicking opens the driver profile', async ({ page, isMobile }) => {
+  await page.goto('/tracks/19');
+  const row = page.getByTestId('race-row').nth(1);
+  if (!isMobile) {
+    await row.hover();
+    await expect.poll(() => row.evaluate((el) => getComputedStyle(el).transform)).not.toBe('none');
+    // No background highlight, and the name turns the team's colour rather than red.
+    const [bgBefore, nameColour] = await row.evaluate((el) => [getComputedStyle(el.querySelector('td')).backgroundColor, getComputedStyle(el.querySelector('.rt-driver a')).color]);
+    expect(nameColour).not.toBe('rgb(225, 6, 0)');
+    await page.mouse.move(0, 0);
+    await expect.poll(() => row.evaluate((el) => getComputedStyle(el.querySelector('td')).backgroundColor)).toBe(bgBefore);
+  }
+  // Click the tyre strip area (not the name link) to prove the whole row is clickable.
+  await row.locator('.rt-strategy').click();
+  await expect(page).toHaveURL(/\/drivers\/hamilton$/);
+});
+
+test('tyre strips show stints and red flags only, no pit stop ticks', async ({ page }) => {
+  await page.goto('/tracks/19');
+  await expect(page.getByTestId('race-row').first()).toBeVisible();
+  await expect(page.locator('.strip .strip__pit:not(.strip__pit--red)')).toHaveCount(0);
+  await expect(page.locator('.strip .strip__pit--red').first()).toBeAttached(); // Mexico City had a red flag
+  await expect(page.locator('.compound-legend')).not.toContainText('Pit stop');
+  await expect(page.locator('.compound-legend')).toContainText('Red flag');
+});
+
+test('following from a row does not open the profile', async ({ page }) => {
+  await page.goto('/tracks/19');
+  await page.getByRole('button', { name: 'Follow Lando Norris' }).click();
+  await expect(page).toHaveURL(/\/tracks\/19$/);
 });

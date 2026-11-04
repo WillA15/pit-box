@@ -74,12 +74,12 @@ test('landing page previews the pit wall', async ({ page }) => {
 test('follows are highlighted on other pages, and teams can be followed from a profile', async ({ page }) => {
   await follow(page, ['max_verstappen'], []);
   await page.goto('/tracks/19');
-  await expect(page.getByTestId('race-row').filter({ hasText: 'Max Verstappen' })).toHaveClass(/is-followed/);
+  await expect(page.getByTestId('race-row').filter({ hasText: 'Max Verstappen' }).getByRole('img', { name: 'You follow this driver' })).toBeVisible();
   await expect(page.locator('.start-grid__box.is-followed--driver')).toHaveCount(1);
   await page.goto('/drivers/leclerc');
   await page.getByRole('button', { name: /Follow Ferrari/ }).click();
   await page.goto('/tracks/19');
-  await expect(page.getByTestId('race-row').filter({ hasText: 'Charles Leclerc' })).toHaveClass(/is-team-followed/);
+  await expect(page.getByTestId('race-row').filter({ hasText: 'Charles Leclerc' }).getByRole('img', { name: 'You follow this team' })).toBeVisible();
   await page.goto('/schedule');
   await expect(page.locator('.podium-chip.is-followed').first()).toBeVisible();
 });

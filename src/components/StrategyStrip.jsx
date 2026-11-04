@@ -29,18 +29,16 @@ export default function StrategyStrip({ stints = [], pits = [], totalLaps, delay
           </motion.span>
         );
       })}
-      {pits.filter((p) => !p.driveThrough).map((p) => {
-        const red = p.suspended || p.laneDuration > 120;
-        return (
-          <span
-            key={p.lap}
-            className={`strip__pit${red ? ' strip__pit--red' : ''}`}
-            style={{ left: `${(p.lap / totalLaps) * 100}%` }}
-            title={red ? `Red flag on lap ${p.lap} (tyres changed in the pit lane)` : `Pit stop, lap ${p.lap}`}
-            aria-hidden="true"
-          />
-        );
-      })}
+      {/* Tyre changes already show each stop, so only red flags get a marker. */}
+      {pits.filter((p) => p.suspended || p.laneDuration > 120).map((p) => (
+        <span
+          key={p.lap}
+          className="strip__pit strip__pit--red"
+          style={{ left: `${(p.lap / totalLaps) * 100}%` }}
+          title={`Red flag on lap ${p.lap} (tyres changed in the pit lane)`}
+          aria-hidden="true"
+        />
+      ))}
     </div>
   );
 }
@@ -52,7 +50,6 @@ export function CompoundLegend() {
         <li key={name}><span className={`strip__stint strip__stint--${cls}`} />{name.charAt(0) + name.slice(1).toLowerCase()}</li>
       ))}
       <li><span className="strip__stint strip__stint--medium strip__stint--used" />Used set</li>
-      <li><span className="strip__pit strip__pit--legend" />Pit stop</li>
       <li><span className="strip__pit strip__pit--legend strip__pit--red" />Red flag</li>
     </ul>
   );
