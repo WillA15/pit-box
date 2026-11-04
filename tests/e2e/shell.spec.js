@@ -8,7 +8,7 @@ test.beforeEach(async ({ page }) => {
 test('landing page loads season data from the snapshot fallback', async ({ page }) => {
   await page.goto('/');
   await expect(page.getByRole('heading', { level: 1 })).toContainText('Pit Box');
-  await expect(page.getByText('Saved snapshot')).toBeVisible();
+  await expect(page.getByText(/Saved snapshot/)).toBeVisible();
   await expect(page.getByText(/rounds complete/)).toBeVisible();
 });
 
@@ -23,7 +23,7 @@ test('every main tab is reachable from the nav', async ({ page }) => {
     ['My Pit Wall', 'My Pit Wall'],
   ]) {
     await nav.getByRole('link', { name: label }).click();
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText(heading);
+    await expect(page.getByRole('heading', { level: 1 }).first()).toHaveText(heading);
   }
 });
 

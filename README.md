@@ -3,6 +3,8 @@
 Your one-stop strategy for all things F1 2026: standings, schedule, track and tyre-strategy breakdowns,
 driver spotlights, and bookmarks for the drivers and teams you follow.
 
+**Live site:** https://pit-box-orpin.vercel.app
+
 Unofficial fan site, not associated with Formula 1 companies or the FIA.
 
 ## Stack

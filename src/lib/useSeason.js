@@ -1,5 +1,9 @@
-import { loadSeason, loadRace } from './dataClient.js';
-import { useAsync } from './useAsync.js';
+import { useSyncExternalStore } from 'react';
+import { seasonResource, raceResource } from './dataClient.js';
 
-export const useSeason = () => useAsync(loadSeason, []);
-export const useRace = (round) => useAsync(() => loadRace(round), [round]);
+function useResource(r) {
+  return useSyncExternalStore(r.subscribe, r.get, r.get);
+}
+
+export const useSeason = () => useResource(seasonResource());
+export const useRace = (round) => useResource(raceResource(round));

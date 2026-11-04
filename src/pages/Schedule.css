@@ -1,0 +1,40 @@
+.next-up { display: grid; grid-template-columns: 1fr auto; gap: 24px; border-left: 6px solid var(--accent); }
+.next-up h2 { margin: 10px 0 2px; font-size: 2rem; font-style: italic; }
+.next-up .tag + .tag { margin-left: 6px; }
+.next-up__side { display: grid; gap: 16px; align-content: start; }
+.next-up__actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.sessions { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 2px; max-width: 460px; }
+.sessions__row { display: grid; grid-template-columns: 10rem 1fr; padding: 6px 10px; background: var(--surface-raised); font-variant-numeric: tabular-nums; }
+.sessions__row.is-race { box-shadow: inset 3px 0 var(--accent); font-weight: 600; }
+.sessions__row.is-sprint { box-shadow: inset 3px 0 var(--sprint); }
+.sessions__row.is-past { opacity: 0.5; }
+.tag--next { background: var(--accent); border-color: var(--accent); }
+.schedule__tz { margin: -12px 0 0; font-size: 0.85rem; }
+
+.schedule { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.schedule__link {
+  display: grid; grid-template-columns: 3rem 2rem 1fr 8.5rem 7rem 13rem; gap: 10px; align-items: center;
+  padding: 12px 14px; background: var(--surface); text-decoration: none; border-left: 3px solid transparent;
+}
+.schedule__row:nth-child(even) .schedule__link { background: var(--surface-raised); }
+.schedule__link:hover { border-left-color: var(--accent); }
+.schedule__row--next .schedule__link { border-left-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.schedule__row--completed .schedule__name strong { color: var(--muted); }
+.schedule__round { font: 800 1.2rem/1 var(--font-head); color: var(--muted); }
+.schedule__flag { font-size: 1.4rem; }
+.schedule__name { display: grid; min-width: 0; }
+.schedule__name small { font-size: 0.8rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.schedule__date { font-variant-numeric: tabular-nums; }
+.schedule__meta { display: flex; gap: 6px; }
+.schedule__podium { display: flex; gap: 4px; justify-content: flex-end; }
+.podium-chip { font: 600 0.8rem/1 var(--font-head); padding: 4px 6px; background: var(--bg); border-left: 3px solid var(--team); white-space: nowrap; }
+.podium-chip b { color: var(--muted); }
+
+@media (max-width: 860px) {
+  .next-up { grid-template-columns: 1fr; }
+  .schedule__link { grid-template-columns: 2.6rem 1.8rem 1fr auto; }
+  .schedule__date { grid-column: 3; font-size: 0.85rem; color: var(--muted); }
+  .schedule__meta { grid-column: 4; grid-row: 1; }
+  .schedule__podium { grid-column: 3 / -1; justify-content: flex-start; }
+  .sessions__row { grid-template-columns: 8.5rem 1fr; }
+}

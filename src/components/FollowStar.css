@@ -1,0 +1,3 @@
+.follow-star { background: none; border: 0; padding: 4px 6px; font-size: 1.15rem; line-height: 1; color: var(--muted); cursor: pointer; }
+.follow-star:hover { color: var(--text); }
+.follow-star--on { color: var(--sprint); }

@@ -1,0 +1,42 @@
+.round-slider { display: grid; gap: 10px; }
+.round-slider__head { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.round-slider__race { margin: 6px 0 0; }
+
+.standings { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.standings__row {
+  display: grid; grid-template-columns: 2.5rem 2.5rem 1fr 4rem 4.5rem 3rem 2.2rem;
+  align-items: center; gap: 8px; padding: 8px 10px;
+  background: var(--surface); border-left: 3px solid var(--team, transparent);
+  font-variant-numeric: tabular-nums;
+}
+.standings__row:nth-child(odd):not(.standings__row--head) { background: var(--surface-raised); }
+.standings__row--head { background: none; border: 0; font: 600 0.75rem/1 var(--font-head); text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+.standings__row--followed { box-shadow: inset 0 0 0 1px var(--sprint); }
+.standings__pos { font: 800 1.3rem/1 var(--font-head); }
+.standings__change { font-size: 0.8rem; color: var(--muted); }
+.standings__change.up { color: var(--good); }
+.standings__change.down { color: var(--bad); }
+.standings__name { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; min-width: 0; }
+.standings__name a { text-decoration: none; font-weight: 600; }
+.standings__name a:hover { color: var(--accent); }
+.standings__name small { font-size: 0.8rem; }
+.standings__pts { font: 800 1.2rem/1 var(--font-head); text-align: right; }
+.standings__gap, .standings__wins { text-align: right; font-size: 0.9rem; }
+
+@media (max-width: 560px) {
+  .standings__row { grid-template-columns: 2rem 2.2rem 1fr 3.2rem 2rem; }
+  .standings__gap, .standings__wins { display: none; }
+  .standings__row--head span:nth-child(5), .standings__row--head span:nth-child(6) { display: none; }
+}
+.round-slider__controls { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.round-slider__controls .segmented__btn { padding: 7px 10px; }
+.round-slider__now .tag { transition: background 0.4s, color 0.4s; }
+.round-slider__now.is-holding .tag { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+.standings__row { position: relative; }
+.standings__flash { position: absolute; inset: 0; pointer-events: none; animation: overtake-flash 1.4s ease-out forwards; }
+.standings__flash--up { background: linear-gradient(90deg, color-mix(in srgb, var(--good) 45%, transparent), transparent 70%); }
+.standings__flash--down { background: linear-gradient(90deg, color-mix(in srgb, var(--bad) 40%, transparent), transparent 70%); }
+@keyframes overtake-flash { from { opacity: 1; } to { opacity: 0; } }
+.trophy { display: inline-flex; align-items: center; filter: drop-shadow(0 0 4px rgba(245, 179, 1, 0.45)); }
+.standings__row--champion { background: linear-gradient(90deg, rgba(245, 179, 1, 0.08), transparent 60%), var(--surface) !important; }

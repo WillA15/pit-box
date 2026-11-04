@@ -1,0 +1,6 @@
+.countdown__label { display: block; font: 600 0.8rem/1 var(--font-head); text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 6px; }
+.countdown__units { display: flex; gap: 8px; }
+.countdown__unit { background: var(--surface-raised); border: 1px solid var(--line); padding: 6px 10px; min-width: 56px; text-align: center; }
+.countdown__unit b { display: block; font: 800 1.8rem/1 var(--font-head); font-variant-numeric: tabular-nums; }
+.countdown__unit small { color: var(--muted); font: 600 0.7rem/1 var(--font-head); }
+.countdown__done { color: var(--accent); font: 800 1.2rem/1 var(--font-head); text-transform: uppercase; }

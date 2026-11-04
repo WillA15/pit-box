@@ -20,8 +20,8 @@
   --tyre-wet: #2b7fff;
   --tyre-unknown: #666b75;
 
-  --font-head: 'Barlow Condensed', 'Arial Narrow', sans-serif;
-  --font-body: 'Barlow', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-head: 'Twemoji Country Flags', 'Barlow Condensed', 'Arial Narrow', sans-serif;
+  --font-body: 'Twemoji Country Flags', 'Barlow', system-ui, -apple-system, 'Segoe UI', sans-serif;
 
   --radius: 6px;
   --gap: 16px;

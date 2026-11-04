@@ -32,3 +32,23 @@ h3 { font-size: 1.15rem; font-weight: 600; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
 }
+
+.segmented { display: inline-flex; flex-wrap: wrap; gap: 4px; }
+.segmented__btn {
+  background: var(--surface); color: var(--muted); border: 1px solid var(--line); cursor: pointer;
+  padding: 7px 14px; font: 600 0.9rem/1 var(--font-head); text-transform: uppercase; letter-spacing: 0.06em;
+}
+.segmented__btn:hover { color: var(--text); }
+.segmented__btn[aria-pressed='true'] { background: var(--accent); border-color: var(--accent); color: #fff; }
+.toolbar { display: flex; flex-wrap: wrap; gap: 12px 20px; align-items: center; }
+.check { display: inline-flex; gap: 8px; align-items: center; color: var(--muted); cursor: pointer; }
+.btn {
+  display: inline-flex; align-items: center; gap: 6px; background: var(--surface-raised); color: var(--text);
+  border: 1px solid var(--line); padding: 8px 14px; cursor: pointer; text-decoration: none;
+  font: 600 0.9rem/1 var(--font-head); text-transform: uppercase; letter-spacing: 0.06em;
+}
+.btn:hover { border-color: var(--accent); }
+.btn--primary { background: var(--accent); border-color: var(--accent); }
+.team-bar { display: inline-block; width: 4px; height: 1.2em; vertical-align: middle; border-radius: 1px; }
+.page-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 12px; }
+.page-head h1 { margin: 0; }
