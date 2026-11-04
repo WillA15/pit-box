@@ -15,7 +15,6 @@ export default function GapMeter({ fight, nameOf, colorOf, title, raceName }) {
   const scaleMax = Math.max(fight.leader.points, ...fight.rivals.map((r) => r.maxPossible)) * 1.04;
   const pct = (v) => `${(v / scaleMax) * 100}%`;
   const rows = [{ ...fight.leader, gap: 0, maxPossible: fight.leader.points + fight.remaining, alive: true, isLeader: true }, ...fight.rivals];
-  const stillIn = fight.rivals.filter((r) => r.alive).length;
   return (
     <section className="panel gap-meter" aria-labelledby={headingId}>
       <div className="gap-meter__head">
@@ -26,7 +25,7 @@ export default function GapMeter({ fight, nameOf, colorOf, title, raceName }) {
           </span>
         ) : (
           <span className="gap-meter__status">
-            {fight.remaining} pts left · {fight.racesLeft} race{fight.racesLeft === 1 ? '' : 's'} · {stillIn} rival{stillIn === 1 ? '' : 's'} still in it
+            {fight.remaining} pts left
           </span>
         )}
       </div>

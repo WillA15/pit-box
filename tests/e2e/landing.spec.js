@@ -29,7 +29,7 @@ test('gap meters show the decided drivers title and the open constructors fight'
   await expect(drivers).toContainText('Decided at Mexico City Grand Prix');
   await expect(drivers.getByTestId('gap-row').first()).toContainText('Antonelli');
   const teams = page.getByRole('region', { name: "Constructors' title" });
-  await expect(teams).toContainText(/pts left/);
+  await expect(teams.locator('.gap-meter__status')).toHaveText(/^\d+ pts left$/);
   await expect(teams.getByRole('img', { name: /^Ferrari: .* can reach/ })).toBeVisible();
 });
 
