@@ -7,6 +7,7 @@ import { buildICS, downloadICS } from '../lib/ics.js';
 import { flag } from '../lib/flags.js';
 import { teamColor } from '../lib/teams.js';
 import { getNow } from '../lib/now.js';
+import { useBookmarks } from '../lib/useBookmarks.js';
 import { Loading, LoadError, SourceNote } from '../components/Status.jsx';
 import Segmented from '../components/Segmented.jsx';
 import Countdown from '../components/Countdown.jsx';
@@ -126,12 +127,13 @@ function NextUp({ race, now }) {
 }
 
 function Podium({ race, season }) {
+  const { followLevel } = useBookmarks();
   const p = podium(race);
   if (!p.length) return <span className="schedule__podium" />;
   return (
     <span className="schedule__podium" aria-label={`Podium: ${p.map((r) => season.drivers[r.driverId]?.familyName).join(', ')}`}>
       {p.map((r) => (
-        <span key={r.driverId} className="podium-chip" style={{ '--team': teamColor(r.constructorId) }}>
+        <span key={r.driverId} className={`podium-chip${followLevel(r.driverId, r.constructorId) ? ` is-followed is-followed--${followLevel(r.driverId, r.constructorId)}` : ''}`} style={{ '--team': teamColor(r.constructorId) }}>
           <b>P{r.pos}</b> {season.drivers[r.driverId]?.code}
         </span>
       ))}

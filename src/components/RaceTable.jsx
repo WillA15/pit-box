@@ -34,7 +34,7 @@ const COLUMNS = {
 /** Results + strategy for one session. `variant` is "race" or "sprint". */
 export default function RaceTable({ season, results, detail, variant = 'race', caption }) {
   const [sort, setSort] = useState({ key: 'pos', dir: 'asc' });
-  const { has } = useBookmarks();
+  const { followLevel } = useBookmarks();
   const rows = sortRows(buildRaceRows(results, detail?.strategies), sort.key, sort.dir);
   const totalLaps = detail?.totalLaps ?? Math.max(0, ...results.map((r) => r.laps ?? 0));
   const cols = COLUMNS[variant];
@@ -86,11 +86,11 @@ export default function RaceTable({ season, results, detail, variant = 'race', c
           {rows.map((r, i) => {
             const d = season.drivers[r.driverId];
             const name = d ? `${d.givenName} ${d.familyName}` : r.driverId;
-            const followed = has('drivers', r.driverId);
+            const level = followLevel(r.driverId, r.constructorId);
             return (
               <tr
                 key={r.driverId}
-                className={`${followed ? 'is-followed' : ''}${r.classified ? '' : ' is-out'}`}
+                className={`${level === 'driver' ? 'is-followed' : level === 'team' ? 'is-team-followed' : ''}${r.classified ? '' : ' is-out'}`}
                 style={{ '--team': teamColor(r.constructorId) }}
                 data-testid="race-row"
               >

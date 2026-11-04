@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useSeason } from '../lib/useSeason.js';
 import { Loading, LoadError, SourceNote } from '../components/Status.jsx';
+import PitWallPreview from '../components/PitWallPreview.jsx';
 
 export default function Landing() {
   const { data, error, loading } = useSeason();
@@ -29,6 +30,7 @@ export default function Landing() {
           <SourceNote data={data} />
         </div>
       )}
+      {data && <PitWallPreview season={data} />}
     </section>
   );
 }

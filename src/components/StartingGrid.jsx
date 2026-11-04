@@ -1,10 +1,12 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import { teamColor } from '../lib/teams.js';
+import { useBookmarks } from '../lib/useBookmarks.js';
 import './StartingGrid.css';
 
 /** Two-column staggered starting grid, like the painted boxes on the track. */
 export default function StartingGrid({ results, season, title = 'Starting grid' }) {
   const reduce = useReducedMotion();
+  const { followLevel } = useBookmarks();
   const slots = results
     .filter((r) => r.grid > 0)
     .sort((a, b) => a.grid - b.grid);
@@ -16,7 +18,7 @@ export default function StartingGrid({ results, season, title = 'Starting grid' 
         {slots.map((r, i) => (
           <motion.li
             key={r.driverId}
-            className={`start-grid__box${r.grid % 2 === 0 ? ' is-right' : ''}`}
+            className={`start-grid__box${r.grid % 2 === 0 ? ' is-right' : ''}${followLevel(r.driverId, r.constructorId) ? ` is-followed--${followLevel(r.driverId, r.constructorId)}` : ''}`}
             style={{ '--team': teamColor(r.constructorId) }}
             initial={reduce ? false : { opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}

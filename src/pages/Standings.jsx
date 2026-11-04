@@ -229,6 +229,7 @@ function StandingsBody({ season }) {
           {shown.map((r) => {
             const ch = changes[r.id] ?? 0;
             const isFollowed = followed.includes(r.id);
+            const teamFollowed = kind === 'drivers' && !isFollowed && bm.teams.includes(r.constructorId);
             const flash = flashFor(r.id);
             const champ = champions[kind];
             const isChampion = champ && champ.id === r.id && round >= champ.round;
@@ -241,7 +242,7 @@ function StandingsBody({ season }) {
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ layout: { type: 'spring', stiffness: 120, damping: 24 }, opacity: { duration: 0.5 } }}
-                className={`standings__row${isFollowed ? ' standings__row--followed' : ''}${isChampion ? ' standings__row--champion' : ''}`}
+                className={`standings__row${isFollowed ? ' standings__row--followed' : ''}${teamFollowed ? ' standings__row--team-followed' : ''}${isChampion ? ' standings__row--champion' : ''}`}
                 style={{ '--team': teamColor(teamOf(r)) }}
                 data-testid="standings-row"
               >

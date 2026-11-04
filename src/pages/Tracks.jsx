@@ -5,6 +5,7 @@ import { nextRace, podium, weekendRange } from '../lib/schedule.js';
 import { flag } from '../lib/flags.js';
 import { teamColor } from '../lib/teams.js';
 import { getNow } from '../lib/now.js';
+import { useBookmarks } from '../lib/useBookmarks.js';
 import { Loading, LoadError, SourceNote } from '../components/Status.jsx';
 import TrackMap from '../components/TrackMap.jsx';
 import './Tracks.css';
@@ -13,6 +14,7 @@ export default function Tracks() {
   const { data: season, error, loading } = useSeason();
   const { data: circuits } = useCircuits();
   const next = season && nextRace(season.races, getNow());
+  const { followLevel } = useBookmarks();
   return (
     <section className="page">
       <div className="page-head">
@@ -50,7 +52,7 @@ export default function Tracks() {
                       {race.sprint && <span className="tag tag--sprint">Sprint</span>}
                       {race.round === next?.round && <span className="tag tag--next">Next up</span>}
                       {winner ? (
-                        <span className="track-card__winner" style={{ '--team': teamColor(winner.constructorId) }}>
+                        <span className={`track-card__winner${followLevel(winner.driverId, winner.constructorId) ? ' is-followed' : ''}`} style={{ '--team': teamColor(winner.constructorId) }}>
                           🏆 {season.drivers[winner.driverId]?.familyName}
                         </span>
                       ) : (

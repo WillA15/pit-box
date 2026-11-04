@@ -15,3 +15,4 @@
 .track-card__meta { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 6px; font-size: 0.85rem; }
 .track-card__winner { font: 600 0.85rem/1 var(--font-head); padding: 4px 8px; background: var(--bg); border-left: 3px solid var(--team); text-transform: uppercase; letter-spacing: 0.04em; }
 .tracks__legend { justify-content: flex-start; margin: -16px 0 0; }
+.track-card__winner.is-followed { box-shadow: inset 0 0 0 1px var(--sprint); color: var(--sprint); }

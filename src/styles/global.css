@@ -66,3 +66,13 @@ h3 { font-size: 1.15rem; font-weight: 600; }
 .stat-tile__value { font: 800 1.35rem/1.1 var(--font-head); }
 .stat-tile__sub { display: block; font-size: 0.8rem; color: var(--muted); margin-top: 2px; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.follow-chip {
+  display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; cursor: pointer;
+  background: var(--surface-raised); color: var(--text); border: 1px solid var(--line); border-left: 3px solid var(--team, var(--line));
+  font: 600 0.88rem/1 var(--font-head); text-transform: uppercase; letter-spacing: 0.04em;
+}
+.follow-chip:hover { border-color: var(--team, var(--accent)); }
+.follow-chip.is-on { background: color-mix(in srgb, var(--sprint) 14%, var(--surface-raised)); border-color: var(--sprint); }
+.follow-chip.is-on span { color: var(--sprint); }
+.chip-row { display: flex; flex-wrap: wrap; gap: 6px; }
+.mini-trend { width: 100%; height: 40px; display: block; }
