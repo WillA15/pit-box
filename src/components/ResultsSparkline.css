@@ -1,0 +1,12 @@
+.sparkline { margin: 0; display: grid; gap: 6px; }
+.sparkline svg { width: 100%; height: auto; overflow: visible; }
+.sparkline figcaption { font-size: 0.78rem; }
+.sparkline__grid { stroke: var(--line); stroke-dasharray: 3 4; }
+.sparkline__axis, .sparkline__round { fill: var(--muted); font: 600 11px var(--font-head); }
+.sparkline__line { fill: none; stroke-width: 2.5; stroke-linejoin: round; }
+.sparkline__dot { fill: var(--surface); stroke-width: 2.5; }
+.sparkline__dot.is-podium { fill: #f5b301; }
+.sparkline__dnf { stroke: var(--bad); stroke-width: 2.5; stroke-linecap: round; }
+.sparkline a:hover .sparkline__dot { r: 8; }
+.sparkline a:focus-visible { outline: none; }
+.sparkline a:focus-visible .sparkline__dot { stroke: var(--text); }

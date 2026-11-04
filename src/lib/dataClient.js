@@ -63,3 +63,7 @@ export const seasonResource = () => resource('season', '/api/season', '/data/sea
 export const raceResource = (round) => resource(`race:${round}`, `/api/race?round=${round}`, `/data/races/${round}.json`);
 // Circuit facts and outlines change rarely, so they only come from the bundled file.
 export const circuitsResource = () => resource('circuits', null, '/data/circuits.json');
+export const careersResource = () => resource('careers', null, '/data/careers.json');
+// News: live feeds (cached 30 min) plus the bundled archive, merged by the page.
+export const newsLiveResource = () => resource('news-live', '/api/news', '/data/news.json');
+export const newsArchiveResource = () => resource('news-archive', null, '/data/news.json');

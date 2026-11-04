@@ -1,0 +1,72 @@
+.driver-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); gap: 10px; }
+.driver-card {
+  position: relative; display: grid; grid-template-columns: 1fr auto; gap: 2px 8px; padding: 14px 14px 12px; min-height: 128px;
+  text-decoration: none; overflow: hidden; border-radius: var(--radius);
+  background: linear-gradient(135deg, color-mix(in srgb, var(--team) 22%, var(--surface)) 0%, var(--surface) 65%);
+  border: 1px solid var(--line); border-top: 4px solid var(--team); transition: transform 0.25s, box-shadow 0.25s;
+}
+.driver-card:hover { transform: translateY(-3px); box-shadow: 0 10px 28px -12px var(--team); }
+.driver-card.is-followed { box-shadow: inset 0 0 0 1px var(--sprint); }
+.driver-card__number { position: absolute; right: 10px; bottom: -14px; font: italic 800 5rem/1 var(--font-head); color: var(--team); opacity: 0.22; pointer-events: none; }
+.driver-card__pos { font: 800 0.85rem/1 var(--font-head); color: var(--muted); letter-spacing: 0.06em; }
+.driver-card__name { grid-column: 1; display: grid; line-height: 1.05; margin-top: 6px; }
+.driver-card__name small { font-size: 0.85rem; color: var(--muted); }
+.driver-card__name b { font: 800 1.45rem/1 var(--font-head); text-transform: uppercase; font-style: italic; }
+.driver-card__team { grid-column: 1; font-size: 0.82rem; }
+.driver-card__pts { grid-column: 1; font: 600 0.9rem/1 var(--font-head); margin-top: 4px; }
+.driver-card__star { grid-column: 2; grid-row: 1; position: relative; z-index: 1; }
+.driver-grid--small .driver-card { min-height: 100px; }
+
+.driver__nav { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; font-size: 0.9rem; }
+.driver__nav a { color: var(--muted); }
+.driver__nav select { background: var(--surface-raised); color: var(--text); border: 1px solid var(--line); padding: 7px 10px; font: inherit; }
+.driver__hero {
+  position: relative; display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: end; overflow: hidden;
+  padding: 28px 24px 22px; border-radius: var(--radius); border: 1px solid var(--line); border-left: 6px solid var(--team);
+  background: linear-gradient(110deg, color-mix(in srgb, var(--team) 30%, var(--surface)) 0%, var(--surface) 60%);
+}
+.driver__number { position: absolute; right: 18px; top: -26px; font: italic 800 11rem/1 var(--font-head); color: var(--team); opacity: 0.18; pointer-events: none; }
+.driver__id h1 { margin: 10px 0 4px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.driver__id h1 small { font-size: 0.5em; color: var(--muted); font-style: normal; width: 100%; }
+.driver__id p { margin: 0; }
+.driver__follow { position: relative; display: grid; justify-items: end; gap: 6px; }
+.driver__follow .follow-star { font-size: 1.8rem; }
+.driver__stats { grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); margin: 0; }
+.driver__stats dd { margin: 0; }
+.driver__split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: 16px; align-items: start; }
+
+.h2h { display: grid; gap: 10px; }
+.h2h + .h2h { margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--line); }
+.h2h__names { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font: 800 1.05rem/1 var(--font-head); text-transform: uppercase; }
+.h2h__names span { font: 400 0.78rem var(--font-body); text-transform: none; }
+.h2h__names a { text-decoration: none; }
+.h2h__row { display: grid; grid-template-columns: 2.6rem 1fr 2.6rem; gap: 8px; align-items: center; }
+.h2h__val { font: 800 1.2rem/1 var(--font-head); text-align: center; color: var(--muted); font-variant-numeric: tabular-nums; }
+.h2h__val.is-ahead { color: var(--text); }
+.h2h__bar { position: relative; display: flex; height: 26px; background: var(--bg); border-radius: 3px; overflow: hidden; }
+.h2h__b { background: color-mix(in srgb, var(--team) 35%, var(--surface-raised)); margin-left: auto; }
+.h2h__label { position: absolute; inset: 0; display: grid; place-items: center; font: 600 0.72rem/1 var(--font-head); text-transform: uppercase; letter-spacing: 0.1em; color: #fff; text-shadow: 0 1px 2px #000; }
+
+.career-strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 0; margin: 0; border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+.career-strip > div { padding: 14px; background: var(--surface); border-right: 1px solid var(--line); }
+.career-strip dt { font: 600 0.72rem/1 var(--font-head); text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 6px; }
+.career-strip dd { margin: 0; font: 800 1.6rem/1 var(--font-head); }
+.career-strip dd small { display: block; font: 400 0.75rem var(--font-body); color: var(--muted); margin-top: 4px; }
+
+.news-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+.news-card { height: 100%; display: grid; align-content: start; gap: 8px; padding: 16px; background: var(--surface); border: 1px solid var(--line); border-top: 3px solid var(--team); border-radius: var(--radius); }
+.news-card__meta { margin: 0; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 0.8rem; color: var(--muted); }
+.news-card__meta b { color: var(--text); }
+.news-card__trend { margin-left: auto; font: 600 0.75rem var(--font-head); text-transform: uppercase; color: var(--sprint); }
+.news-card h3 { margin: 0; font-size: 1.1rem; text-transform: none; font-family: var(--font-body); font-weight: 600; line-height: 1.3; letter-spacing: 0; }
+.news-card h3 a { text-decoration: none; }
+.news-card h3 a:hover { color: var(--accent); text-decoration: underline; }
+.news-card__summary { margin: 0; font-size: 0.88rem; color: var(--muted); }
+.news-card__also { margin: 0; font-size: 0.78rem; }
+
+@media (max-width: 860px) {
+  .driver__split { grid-template-columns: 1fr; }
+  .driver__number { font-size: 7rem; top: -10px; }
+  .driver__hero { grid-template-columns: 1fr; }
+  .driver__follow { justify-items: start; }
+}

@@ -65,3 +65,4 @@ h3 { font-size: 1.15rem; font-weight: 600; }
 .stat-tile__label { display: block; font: 600 0.72rem/1 var(--font-head); text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 6px; }
 .stat-tile__value { font: 800 1.35rem/1.1 var(--font-head); }
 .stat-tile__sub { display: block; font-size: 0.8rem; color: var(--muted); margin-top: 2px; }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
