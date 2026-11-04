@@ -1,0 +1,10 @@
+.start-grid { margin: 0; }
+.start-grid figcaption { font: 800 1.1rem/1 var(--font-head); text-transform: uppercase; margin-bottom: 10px; }
+.start-grid__boxes { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 6px 18px; max-width: 360px; }
+.start-grid__box {
+  display: flex; gap: 8px; align-items: center; padding: 6px 8px; background: var(--surface-raised);
+  border-top: 2px solid var(--text); border-left: 3px solid var(--team); font: 600 0.95rem/1 var(--font-head);
+}
+.start-grid__box.is-right { transform: translateY(14px); }
+.start-grid__box b { color: var(--muted); min-width: 1.4rem; }
+.start-grid__pit { margin-top: 22px; font-size: 0.85rem; }

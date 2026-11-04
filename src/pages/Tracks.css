@@ -1,0 +1,17 @@
+.track-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; }
+.track-card { display: grid; grid-template-rows: auto 1fr; height: 100%; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); text-decoration: none; overflow: hidden; transition: transform 0.25s, border-color 0.25s; }
+.track-card:hover { transform: translateY(-3px); border-color: var(--accent); }
+.track-card--next { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
+.track-card__map { padding: 18px 28px 6px; background: radial-gradient(circle at 50% 40%, var(--surface-raised), var(--surface)); display: grid; place-items: center; height: 170px; }
+.track-card__map .track-map { max-height: 140px; width: auto; max-width: 100%; }
+.track-card__map .track-map__base { stroke-width: 34; }
+.track-card__map .track-map__line { stroke-width: 14; }
+.track-card__map .track-map__pit { stroke-width: 13; stroke-dasharray: 22 14; }
+.track-card__map .track-map__pit-base { stroke-width: 30; }
+.track-card__body { padding: 12px 14px 14px; display: grid; gap: 4px; align-content: start; }
+.track-card__round { font: 800 0.85rem/1 var(--font-head); color: var(--accent); letter-spacing: 0.08em; }
+.track-card__name { font-size: 1.2rem; margin: 0; }
+.track-card__circuit { margin: 0; font-size: 0.82rem; }
+.track-card__meta { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 6px; font-size: 0.85rem; }
+.track-card__winner { font: 600 0.85rem/1 var(--font-head); padding: 4px 8px; background: var(--bg); border-left: 3px solid var(--team); text-transform: uppercase; letter-spacing: 0.04em; }
+.tracks__legend { justify-content: flex-start; margin: -16px 0 0; }

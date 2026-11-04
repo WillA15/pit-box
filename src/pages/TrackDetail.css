@@ -1,0 +1,26 @@
+.track__crumbs { font-size: 0.85rem; color: var(--muted); }
+.track__crumbs a { color: var(--muted); }
+.track__head { display: flex; justify-content: space-between; align-items: end; flex-wrap: wrap; gap: 12px; }
+.track__head h1 { margin: 10px 0 4px; }
+.track__head .tag + .tag { margin-left: 6px; }
+.track__head p { margin: 0; }
+.track__top { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+.track__map { display: grid; place-items: center; gap: 8px; padding: 28px; }
+.track__map .track-map { max-height: 380px; width: auto; max-width: 100%; }
+.track__map-note { font-size: 0.78rem; margin: 0; text-align: center; }
+.track__facts { grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 0; }
+.track__facts dd, .quick-stats dd { margin: 0; }
+.track__facts .stat-tile:nth-last-child(1):nth-child(odd) { grid-column: 1 / -1; }
+.track__upcoming { display: grid; gap: 8px; justify-items: start; }
+.track__results { display: grid; gap: 16px; }
+.track__panel { display: grid; gap: 16px; }
+.track__session { display: grid; grid-template-columns: minmax(220px, 300px) minmax(0, 1fr); gap: 16px; align-items: start; }
+.quick-stats { margin: 0; }
+/* Keep the grid in view while scrolling the (long) results table on wide screens. */
+@media (min-width: 861px) { .track__session > .panel:first-child { position: sticky; top: 84px; } }
+.track__pager { display: flex; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+
+@media (max-width: 860px) {
+  .track__top, .track__session { grid-template-columns: 1fr; }
+  .track__map .track-map { max-height: 280px; }
+}

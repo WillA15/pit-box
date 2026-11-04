@@ -34,7 +34,8 @@ export function createResource(liveUrl, snapshotUrl, { timeoutMs = 20000, fetche
   let snapFailed = false;
   let liveFailed = false;
 
-  fetcher(liveUrl, timeoutMs).then(
+  if (!liveUrl) liveFailed = true;
+  (liveUrl ? fetcher(liveUrl, timeoutMs) : new Promise(() => {})).then(
     (d) => { liveDone = true; set({ data: { ...d, source: 'live' }, loading: false, error: null }); },
     (e) => { liveFailed = true; if (snapFailed) set({ error: e, loading: false }); },
   );
@@ -60,3 +61,5 @@ export function resource(key, liveUrl, snapshotUrl) {
 
 export const seasonResource = () => resource('season', '/api/season', '/data/season.json');
 export const raceResource = (round) => resource(`race:${round}`, `/api/race?round=${round}`, `/data/races/${round}.json`);
+// Circuit facts and outlines change rarely, so they only come from the bundled file.
+export const circuitsResource = () => resource('circuits', null, '/data/circuits.json');

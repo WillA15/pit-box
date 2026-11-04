@@ -1,0 +1,18 @@
+.track-map { width: 100%; height: auto; display: block; overflow: visible; }
+.track-map__base { fill: none; stroke: var(--line); stroke-width: 32; stroke-linejoin: round; stroke-linecap: round; }
+.track-map__line { fill: none; stroke: var(--map-color); stroke-width: 15; stroke-linejoin: round; stroke-linecap: round; }
+.track-map__start { fill: var(--text); }
+.track-map__dot { fill: var(--text); stroke: var(--map-color); stroke-width: 6; }
+.track-map__glow { fill: var(--map-color); opacity: 0.3; }
+.track-map--empty { display: grid; place-items: center; aspect-ratio: 4 / 3; border: 1px dashed var(--line); border-radius: var(--radius); }
+
+/* Pit lane: its own colour, dashed like the painted pit-lane line. */
+.track-map__pit-base { fill: none; stroke: var(--bg); stroke-width: 22; stroke-linejoin: round; stroke-linecap: round; }
+.track-map__pit { fill: none; stroke: var(--pit-lane); stroke-width: 9; stroke-linejoin: round; stroke-linecap: round; stroke-dasharray: 16 11; }
+.track-map__figure { margin: 0; display: grid; gap: 10px; justify-items: center; width: 100%; }
+.track-map__legend { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px 16px; font-size: 0.78rem; color: var(--muted); }
+.track-map__legend span { display: inline-flex; align-items: center; gap: 6px; }
+.track-map__key { display: inline-block; width: 18px; height: 4px; border-radius: 2px; }
+.track-map__key--track { background: var(--map-color, var(--accent)); }
+.track-map__key--pit { background: repeating-linear-gradient(90deg, var(--pit-lane) 0 5px, transparent 5px 8px); }
+.track-map__key--start { width: 4px; height: 12px; background: var(--text); }

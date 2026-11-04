@@ -42,3 +42,14 @@ describe('createResource', () => {
     expect(r.get().loading).toBe(false);
   });
 });
+
+describe('createResource without a live URL', () => {
+  it('uses the snapshot only, and errors if it fails', async () => {
+    const ok = createResource(null, '/snap', { fetcher: async () => ({ v: 1 }) });
+    await tick();
+    expect(ok.get().data).toEqual({ v: 1, source: 'snapshot' });
+    const bad = createResource(null, '/snap', { fetcher: () => Promise.reject(new Error('x')) });
+    await tick(); await tick();
+    expect(bad.get().error).toBeTruthy();
+  });
+});

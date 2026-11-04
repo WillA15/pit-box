@@ -1,0 +1,20 @@
+.strip { position: relative; height: 18px; background: var(--bg); border-radius: 3px; overflow: hidden; min-width: 120px; }
+.strip--empty { display: block; height: auto; background: none; font-size: 0.8rem; }
+.strip__stint {
+  position: absolute; top: 0; bottom: 0; display: flex; align-items: center; justify-content: center;
+  border-right: 2px solid var(--bg); font: 800 0.7rem/1 var(--font-head); color: #111;
+}
+.strip__stint--soft { background: var(--tyre-soft); }
+.strip__stint--medium { background: var(--tyre-medium); }
+.strip__stint--hard { background: var(--tyre-hard); }
+.strip__stint--inter { background: var(--tyre-inter); }
+.strip__stint--wet { background: var(--tyre-wet); color: #fff; }
+.strip__stint--unknown { background: var(--tyre-unknown); }
+.strip__stint--used { background-image: repeating-linear-gradient(135deg, transparent 0 4px, rgba(0, 0, 0, 0.28) 4px 6px); }
+.strip__pit { position: absolute; top: -2px; bottom: -2px; width: 2px; margin-left: -1px; background: var(--text); opacity: 0.85; }
+
+.compound-legend { list-style: none; display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 0; padding: 0; font-size: 0.8rem; color: var(--muted); }
+.compound-legend li { display: inline-flex; align-items: center; gap: 6px; }
+.compound-legend .strip__stint { position: static; width: 18px; height: 12px; border-radius: 2px; border: 0; }
+.compound-legend .strip__pit--legend { position: static; display: inline-block; height: 14px; margin: 0; }
+.strip__pit--red { background: var(--bad); width: 3px; opacity: 1; }

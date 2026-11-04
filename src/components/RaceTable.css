@@ -1,0 +1,58 @@
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.race-table-wrap { display: grid; gap: 12px; }
+.race-table { width: 100%; border-collapse: separate; border-spacing: 0 2px; font-variant-numeric: tabular-nums; }
+.race-table th { text-align: left; font: 600 0.72rem/1 var(--font-head); text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); padding: 6px 8px; white-space: nowrap; }
+.race-table th button { all: unset; cursor: pointer; }
+.race-table th button:hover, .race-table th[aria-sort] button { color: var(--text); }
+.race-table th button:focus-visible { outline: 2px solid var(--accent); }
+.race-table td { background: var(--surface); padding: 8px; vertical-align: middle; }
+.race-table tbody tr:nth-child(even) td { background: var(--surface-raised); }
+.race-table td:first-child { border-left: 3px solid var(--team); }
+.race-table tr.is-followed td { box-shadow: inset 0 1px var(--sprint), inset 0 -1px var(--sprint); }
+.race-table tr.is-out .rt-pos b { color: var(--bad); }
+.rt-pos { width: 3.2rem; }
+.rt-pos b { font: 800 1.05rem/1 var(--font-head); }
+.rt-driver { min-width: 11rem; }
+.rt-driver__name { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
+.rt-driver a { font-weight: 600; text-decoration: none; }
+.rt-driver small { display: block; }
+.trophy, .fastest-lap-icon { display: inline-flex; align-items: center; }
+.fastest-lap-icon { filter: drop-shadow(0 0 4px rgba(199, 125, 255, 0.5)); }
+.rt-driver a:hover { color: var(--accent); }
+.rt-driver small { font-size: 0.78rem; }
+.rt-strategy { width: 34%; min-width: 160px; }
+.rt-gained.up { color: var(--good); }
+.rt-gained.down { color: var(--bad); }
+.rt-fastestLap.is-fastest { color: #c77dff; font-weight: 600; }
+.rt-points { font: 800 1.05rem/1 var(--font-head); text-align: right; }
+.rt-follow { width: 2rem; }
+
+/* Phones: each driver becomes a card; the strip gets the full width, small stats wrap below. */
+@media (max-width: 760px) {
+  .race-table thead { display: none; }
+  .race-table, .race-table tbody { display: block; }
+  .race-table tr {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; margin-bottom: 4px;
+    background: var(--surface); border-left: 3px solid var(--team); padding: 8px 10px;
+  }
+  .race-table tbody tr:nth-child(even) { background: var(--surface-raised); }
+  .race-table td, .race-table tbody tr:nth-child(even) td { background: none; padding: 0; border: 0 !important; width: auto; min-width: 0; }
+  .rt-pos { order: 1; width: 2.6rem !important; }
+  .rt-driver { order: 2; flex: 1; }
+  .rt-points { order: 3; }
+  .rt-follow { order: 4; }
+  .rt-strategy { order: 5; flex-basis: 100%; }
+  .rt-grid, .rt-gained, .rt-stops, .rt-fastestLap { order: 6; font-size: 0.8rem; }
+  .rt-fastestLap.is-empty { display: none; }
+  .rt-grid::before, .rt-stops::before, .rt-fastestLap::before {
+    content: attr(data-label) ' '; color: var(--muted); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em;
+  }
+  .race-table tr.is-followed td { box-shadow: none; }
+  .race-table tr.is-followed { box-shadow: inset 0 0 0 1px var(--sprint); }
+}
+.race-table__tools { display: flex; flex-wrap: wrap; gap: 10px 20px; align-items: center; justify-content: space-between; }
+.race-table__sort { display: none; font-size: 0.85rem; color: var(--muted); }
+.race-table__sort select { background: var(--surface-raised); color: var(--text); border: 1px solid var(--line); padding: 6px 8px; font: inherit; }
+@media (max-width: 760px) {
+  .race-table__sort { display: inline-flex; gap: 6px; align-items: center; }
+}
