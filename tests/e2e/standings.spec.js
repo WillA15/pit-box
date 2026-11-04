@@ -104,3 +104,18 @@ test('champion trophy appears from the clinching round onwards', async ({ page }
   await page.getByRole('button', { name: 'Constructors' }).click();
   await expect(page.getByRole('img', { name: /World Champion/ })).toHaveCount(0);
 });
+
+test('the race name links to its track page, rising and turning red on hover', async ({ page, isMobile }) => {
+  const link = page.locator('.round-slider__race-link');
+  await expect(link).toHaveText('Mexico City Grand Prix');
+  if (!isMobile) {
+    await link.hover();
+    await expect.poll(() => link.evaluate((el) => getComputedStyle(el).color)).toBe('rgb(225, 6, 0)');
+    await expect.poll(() => link.evaluate((el) => getComputedStyle(el).transform)).not.toBe('none');
+  }
+  // Picking another round changes where it goes.
+  await page.getByRole('button', { name: /^Round 6:/ }).click();
+  await expect(link).toHaveText('Monaco Grand Prix');
+  await link.click();
+  await expect(page).toHaveURL(/\/tracks\/6$/);
+});

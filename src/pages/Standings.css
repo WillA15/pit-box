@@ -1,6 +1,10 @@
 .round-slider { display: grid; gap: 10px; }
 .round-slider__head { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
 .round-slider__race { margin: 6px 0 0; }
+/* Race name links to its track page: rises and turns red on hover. */
+.round-slider__race-link { display: inline-block; color: inherit; text-decoration: none; transition: transform 0.18s ease-out, color 0.18s ease-out; }
+.round-slider__race-link:hover, .round-slider__race-link:focus-visible { color: var(--accent); transform: translateY(-1px); }
+@media (prefers-reduced-motion: reduce) { .round-slider__race-link:hover, .round-slider__race-link:focus-visible { transform: none; } }
 
 .standings { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
 .standings__row {

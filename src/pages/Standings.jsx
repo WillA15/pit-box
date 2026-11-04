@@ -193,7 +193,13 @@ function StandingsBody({ season }) {
         <div className="round-slider__head">
           <div className={`round-slider__now${holding ? ' is-holding' : ''}`} aria-live="polite">
             <span className="tag">After round {round}</span>
-            <h2 className="round-slider__race">{race?.name}</h2>
+            <h2 className="round-slider__race">
+              {race ? (
+                <Link to={`/tracks/${race.round}`} className="round-slider__race-link" title={`Open the ${race.name} track page`}>
+                  {race.name}
+                </Link>
+              ) : null}
+            </h2>
           </div>
           <div className="round-slider__controls">
             <Segmented label="Replay speed" options={SPEEDS} value={speed} onChange={setSpeed} />
