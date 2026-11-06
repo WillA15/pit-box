@@ -10,6 +10,10 @@ import './styles/global.css';
 // Windows has no flag emoji; this loads a small flags-only font (bundled locally) only when needed.
 polyfillCountryFlagEmojis('Twemoji Country Flags', flagFontUrl);
 
+// Every page change (including Back) should land at the top, so turn off the browser's own
+// scroll restoration, which would otherwise put you back where you were.
+if ('scrollRestoration' in window.history) window.history.scrollRestoration = 'manual';
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>

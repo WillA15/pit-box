@@ -1,6 +1,7 @@
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { useEffect } from 'react';
+import { useLayoutEffect } from 'react';
+import BackButton from './BackButton.jsx';
 import './Layout.css';
 
 const TABS = [
@@ -13,9 +14,10 @@ const TABS = [
 
 export default function Layout() {
   const { pathname } = useLocation();
+  // Start every page at the top, before it paints (so there's no flash of the old position).
   // Braces matter: newer browsers return a Promise from scrollTo, which React would treat as a cleanup.
-  useEffect(() => {
-    window.scrollTo(0, 0);
+  useLayoutEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
   }, [pathname]);
 
   return (
@@ -46,6 +48,7 @@ export default function Layout() {
         </div>
       </header>
       <main id="main" className="wrap">
+        <BackButton />
         {/* Each page eases in when you change tab (enter-only, so navigation never waits). */}
         <motion.div key={pathname.split('/')[1] || 'home'} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, ease: 'easeOut' }}>
           <Outlet />

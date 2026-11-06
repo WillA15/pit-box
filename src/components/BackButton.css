@@ -1,0 +1,11 @@
+.back-button {
+  display: inline-flex; align-items: center; gap: 6px; margin-top: 16px; padding: 6px 12px 6px 8px; cursor: pointer;
+  background: var(--surface); color: var(--muted); border: 1px solid var(--line); border-radius: 999px;
+  font: 600 0.85rem/1 var(--font-head); text-transform: uppercase; letter-spacing: 0.05em;
+  transition: color 0.18s, border-color 0.18s, transform 0.18s;
+}
+.back-button span { transition: transform 0.18s; }
+.back-button:hover, .back-button:focus-visible { color: var(--text); border-color: var(--accent); }
+.back-button:hover span { transform: translateX(-3px); }
+.back-button + * .page { padding-top: 16px; }
+@media (prefers-reduced-motion: reduce) { .back-button:hover span { transform: none; } }
