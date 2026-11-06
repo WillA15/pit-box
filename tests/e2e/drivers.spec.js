@@ -64,3 +64,31 @@ test('switcher changes driver and unknown ids are handled', async ({ page }) => 
   await page.goto('/drivers/nobody');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Driver not found');
 });
+
+test('profile follow buttons say Follow, then Following, for driver and team', async ({ page }) => {
+  await page.goto('/drivers/norris');
+  const driver = page.getByRole('button', { name: 'Follow Lando Norris' });
+  const team = page.getByRole('button', { name: 'Follow McLaren' });
+  await expect(driver).toContainText('☆');
+  await driver.click();
+  await expect(page.getByRole('button', { name: 'Following Lando Norris' })).toContainText('★');
+  await team.click();
+  await expect(page.getByRole('button', { name: 'Following McLaren' })).toContainText('★');
+  // Survives a reload, and tapping again unfollows.
+  await page.reload();
+  await page.getByRole('button', { name: 'Following Lando Norris' }).click();
+  await expect(page.getByRole('button', { name: 'Follow Lando Norris' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Following McLaren' })).toBeVisible();
+});
+
+test('every driver profile has both follow buttons', async ({ page }) => {
+  const season = await (await page.request.get('/data/season.json')).json();
+  await page.goto('/drivers');
+  for (const id of Object.keys(season.drivers).slice(0, 24)) {
+    const d = season.drivers[id];
+    if (!season.races.some((r) => r.results.some((x) => x.driverId === id))) continue;
+    await page.goto(`/drivers/${id}`);
+    await expect(page.locator('.driver__follow .follow-chip')).toHaveCount(2);
+    await expect(page.getByRole('button', { name: `Follow ${d.givenName} ${d.familyName}` })).toBeVisible();
+  }
+});

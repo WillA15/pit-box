@@ -8,6 +8,4 @@
 .start-grid__box.is-right { transform: translateY(14px); }
 .start-grid__box b { color: var(--muted); min-width: 1.4rem; }
 .start-grid__pit { margin-top: 22px; font-size: 0.85rem; }
-.start-grid__box.is-followed--driver { box-shadow: inset 0 0 0 1px var(--sprint); }
 .start-grid__box.is-followed--driver span { color: var(--sprint); }
-.start-grid__box.is-followed--team { box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--sprint) 45%, transparent); }

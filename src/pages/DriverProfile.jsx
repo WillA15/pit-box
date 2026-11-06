@@ -8,7 +8,6 @@ import { teamColor, teamShortName } from '../lib/teams.js';
 import { useCareers, useNews } from '../lib/useSeason.js';
 import { getNow } from '../lib/now.js';
 import { SourceNote } from '../components/Status.jsx';
-import FollowStar from '../components/FollowStar.jsx';
 import FollowChip from '../components/FollowChip.jsx';
 import Trophy from '../components/Trophy.jsx';
 import ResultsSparkline from '../components/ResultsSparkline.jsx';
@@ -64,8 +63,8 @@ export default function DriverProfile({ season, driverId }) {
           </p>
         </div>
         <div className="driver__follow">
-          <FollowStar kind="drivers" id={driverId} label={name} />
-          <FollowChip kind="teams" id={driver.constructorId} label={`Follow ${teamShortName(driver.constructorId, team?.name)}`} color={color} />
+          <FollowChip kind="drivers" id={driverId} name={name} color={color} />
+          <FollowChip kind="teams" id={driver.constructorId} name={teamShortName(driver.constructorId, team?.name)} color={color} />
           <SourceNote data={season} />
         </div>
       </motion.header>

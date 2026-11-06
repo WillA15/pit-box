@@ -30,7 +30,6 @@
 .driver__id h1 small { font-size: 0.5em; color: var(--muted); font-style: normal; width: 100%; }
 .driver__id p { margin: 0; }
 .driver__follow { position: relative; display: grid; justify-items: end; gap: 6px; }
-.driver__follow .follow-star { font-size: 1.8rem; }
 .driver__stats { grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); margin: 0; }
 .driver__stats dd { margin: 0; }
 .driver__split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: 16px; align-items: start; }

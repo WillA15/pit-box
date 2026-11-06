@@ -76,6 +76,8 @@ test('follows are highlighted on other pages, and teams can be followed from a p
   await page.goto('/tracks/19');
   await expect(page.getByTestId('race-row').filter({ hasText: 'Max Verstappen' }).getByRole('img', { name: 'You follow this driver' })).toBeVisible();
   await expect(page.locator('.start-grid__box.is-followed--driver')).toHaveCount(1);
+  // Followed drivers in the grid are marked by gold text only, with no outline.
+  await expect(page.locator('.start-grid__box.is-followed--driver')).toHaveCSS('box-shadow', 'none');
   await page.goto('/drivers/leclerc');
   await page.getByRole('button', { name: /Follow Ferrari/ }).click();
   await page.goto('/tracks/19');
