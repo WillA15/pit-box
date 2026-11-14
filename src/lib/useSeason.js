@@ -1,10 +1,11 @@
-import { useSyncExternalStore } from 'react';
-import { useMemo } from 'react';
+import { useMemo, useSyncExternalStore } from 'react';
 import { seasonResource, raceResource, circuitsResource, careersResource, newsLiveResource, newsArchiveResource } from './dataClient.js';
 import { mergeArchive } from './news.js';
 
+// Returns { data, error, loading, liveLoading, retry }.
 function useResource(r) {
-  return useSyncExternalStore(r.subscribe, r.get, r.get);
+  const state = useSyncExternalStore(r.subscribe, r.get, r.get);
+  return { ...state, retry: r.retry };
 }
 
 export const useSeason = () => useResource(seasonResource());
@@ -20,6 +21,8 @@ export function useNews() {
   return {
     items,
     loading: live.loading && archive.loading,
+    liveLoading: live.liveLoading,
+    retry: () => { live.retry(); archive.retry(); },
     error: live.error && archive.error,
     source: live.data?.source === 'live' ? 'live' : 'snapshot',
     generatedAt: live.data?.generatedAt ?? archive.data?.generatedAt,

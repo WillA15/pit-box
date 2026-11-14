@@ -18,7 +18,7 @@ export default function Trophy({ title, size = 18 }) {
         <defs>
           <linearGradient id={gid} x1="0" y1="0" x2="0" y2="1">
             <stop offset="0" stopColor="#ffe08a" />
-            <stop offset="0.55" stopColor="#f5b301" />
+            <stop offset="0.55" stopColor="var(--trophy)" />
             <stop offset="1" stopColor="#b87800" />
           </linearGradient>
         </defs>

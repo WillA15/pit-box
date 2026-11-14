@@ -6,7 +6,7 @@
   border: 1px solid var(--line); border-top: 4px solid var(--team); transition: transform 0.25s, box-shadow 0.25s;
 }
 .driver-card:hover { transform: translateY(-3px); box-shadow: 0 10px 28px -12px var(--team); }
-.driver-card.is-followed { box-shadow: inset 0 0 0 1px var(--sprint); }
+/* Followed drivers are marked by the filled star only (no outline on the card). */
 .driver-card__number { position: absolute; right: 10px; bottom: -14px; font: italic 800 5rem/1 var(--font-head); color: var(--team); opacity: 0.22; pointer-events: none; }
 .driver-card__pos { font: 800 0.85rem/1 var(--font-head); color: var(--muted); letter-spacing: 0.06em; }
 .driver-card__name { grid-column: 1; display: grid; line-height: 1.05; margin-top: 6px; }
@@ -25,7 +25,8 @@
   padding: 28px 24px 22px; border-radius: var(--radius); border: 1px solid var(--line); border-left: 6px solid var(--team);
   background: linear-gradient(110deg, color-mix(in srgb, var(--team) 30%, var(--surface)) 0%, var(--surface) 60%);
 }
-.driver__number { position: absolute; right: 18px; top: -26px; font: italic 800 11rem/1 var(--font-head); color: var(--team); opacity: 0.18; pointer-events: none; }
+.driver__number { position: absolute; left: 18px; top: -26px; font: italic 800 11rem/1 var(--font-head); color: var(--team); opacity: 0.18; pointer-events: none; }
+.driver__id { position: relative; }
 .driver__id h1 { margin: 10px 0 4px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
 .driver__id h1 small { font-size: 0.5em; color: var(--muted); font-style: normal; width: 100%; }
 .driver__id p { margin: 0; }
@@ -65,7 +66,7 @@
 
 @media (max-width: 860px) {
   .driver__split { grid-template-columns: 1fr; }
-  .driver__number { font-size: 7rem; top: -10px; }
+  .driver__number { font-size: 7rem; top: -10px; left: auto; right: 18px; }
   .driver__hero { grid-template-columns: 1fr; }
   .driver__follow { justify-items: start; }
 }

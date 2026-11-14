@@ -1,4 +1,4 @@
-.follow-star { position: relative; background: none; border: 0; padding: 4px 6px; font-size: 1.15rem; line-height: 1; color: var(--muted); cursor: pointer; }
+.follow-star { position: relative; display: inline-flex; align-items: center; justify-content: center; min-width: 44px; min-height: 44px; background: none; border: 0; padding: 0; font-size: 1.15rem; line-height: 1; color: var(--muted); cursor: pointer; }
 .follow-star:hover { color: var(--text); }
 .follow-star--on { color: var(--sprint); }
 .follow-star__burst { position: absolute; left: 50%; top: 50%; pointer-events: none; }

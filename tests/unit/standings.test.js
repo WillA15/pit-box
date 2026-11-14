@@ -92,9 +92,15 @@ describe('championClinch', () => {
     const h = computeStandingsHistory(season.races);
     expect(championClinch(h, season.races, 'drivers')).toEqual({ id: 'antonelli', round: 19 });
   });
-  it('does not crown a constructors champion yet (real snapshot)', () => {
+  // The season as it stood after round 19, so these stay true as later rounds are added.
+  const after19 = season.races.map((r) => (r.round > 19 ? { ...r, results: [], sprintResults: [] } : r));
+  it('does not crown a constructors champion after round 19', () => {
+    const h = computeStandingsHistory(after19);
+    expect(championClinch(h, after19, 'constructors')).toBeNull();
+  });
+  it('crowns Mercedes at round 20 (real snapshot)', () => {
     const h = computeStandingsHistory(season.races);
-    expect(championClinch(h, season.races, 'constructors')).toBeNull();
+    expect(championClinch(h, season.races, 'constructors')).toEqual({ id: 'mercedes', round: 20 });
   });
   it('needs a lead strictly bigger than the points left', () => {
     const res = (driverId, pos, points) => ({ driverId, pos, positionText: String(pos), points, constructorId: 't' });
@@ -122,11 +128,12 @@ describe('titleFight (real 2026 snapshot)', () => {
     expect(f.rivals.every((r) => !r.alive)).toBe(true);
     expect(f.rivals[0].gap).toBe(f.leader.points - f.rivals[0].points);
   });
-  it('constructors: still open, with points remaining for a team', () => {
-    const f = titleFight(h, season.races, 'constructors');
+  it('constructors after round 19: still open, with points remaining for a team', () => {
+    const races19 = season.races.map((r) => (r.round > 19 ? { ...r, results: [], sprintResults: [] } : r));
+    const f = titleFight(computeStandingsHistory(races19), races19, 'constructors');
     expect(f.decided).toBe(false);
     expect(f.rivals[0].alive).toBe(true);
-    expect(f.remaining).toBe(pointsRemaining(season.races, f.round, 'constructors'));
-    expect(f.racesLeft).toBe(season.races.filter((r) => r.round > f.round).length);
+    expect(f.remaining).toBe(pointsRemaining(races19, f.round, 'constructors'));
+    expect(f.racesLeft).toBe(races19.filter((r) => r.round > f.round).length);
   });
 });

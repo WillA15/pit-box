@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { lazy, Suspense, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSeason, useNews } from '../lib/useSeason.js';
@@ -16,8 +16,20 @@ import Countdown from '../components/Countdown.jsx';
 import FollowChip from '../components/FollowChip.jsx';
 import FollowStar from '../components/FollowStar.jsx';
 import MiniTrend from '../components/MiniTrend.jsx';
-import PointsChart from '../components/PointsChart.jsx';
+import { pts } from '../lib/format.js';
 import './PitWall.css';
+
+// The chart library is big, so it loads only when this page needs it.
+const PointsChart = lazy(() => import('../components/PointsChart.jsx'));
+
+// "3h ago", "yesterday", "4 days ago" (same wording as the driver page news).
+const ago = (iso, now) => {
+  const h = Math.round((now - Date.parse(iso)) / 3600000);
+  if (h < 1) return 'just now';
+  if (h < 24) return `${h}h ago`;
+  const d = Math.round(h / 24);
+  return d === 1 ? 'yesterday' : `${d} days ago`;
+};
 
 export default function PitWall() {
   const { data: season, error, loading } = useSeason();
@@ -90,6 +102,7 @@ function PitWallBody({ season }) {
       {drivers.length > 0 && (
         <div className="panel">
           <h2>Points race</h2>
+          <Suspense fallback={null}>
           <PointsChart
             history={history}
             kind="drivers"
@@ -103,6 +116,7 @@ function PitWallBody({ season }) {
               dashed: drivers.slice(0, i).some((o) => season.drivers[o.id].constructorId === season.drivers[d.id].constructorId),
             }))}
           />
+          </Suspense>
         </div>
       )}
 
@@ -201,7 +215,7 @@ function DriverCard({ s, season, i, max }) {
       <header className="pw-card__head">
         <div>
           <Link to={`/drivers/${s.id}`} className="pw-card__name">{name}</Link>
-          <small className="muted">{season.constructors[d.constructorId]?.name}</small>
+          <small className="muted">{teamShortName(d.constructorId, season.constructors[d.constructorId]?.name)}</small>
         </div>
         <FollowStar kind="drivers" id={s.id} label={name} />
       </header>
@@ -233,7 +247,7 @@ function DriverCard({ s, season, i, max }) {
 
 function TeamCard({ s, season, i, max }) {
   const color = teamColor(s.id);
-  const name = season.constructors[s.id]?.name ?? s.id;
+  const name = teamShortName(s.id, season.constructors[s.id]?.name ?? s.id);
   return (
     <motion.li
       layout
@@ -270,7 +284,7 @@ function TeamCard({ s, season, i, max }) {
               <Link to={`/drivers/${c.driverId}`}>{season.drivers[c.driverId]?.code}</Link> <b>{c.label}</b>
             </span>
           ))}
-          <span className="muted"> · {s.latest.points} pts</span>
+          <span className="muted"> · {pts(s.latest.points)}</span>
         </p>
       )}
     </motion.li>
@@ -294,7 +308,8 @@ function YourNews({ season, follows }) {
               {s.lead.title}
               <span className="sr-only"> (opens {s.lead.source} in a new tab)</span>
             </a>
-            <small className="muted">{s.lead.source}{s.outlets > 1 ? ` + ${s.outlets - 1} more` : ''}</small>
+            <small className="muted">
+              <time dateTime={s.lead.date}>{ago(s.lead.date, now)}</time> · {s.lead.source}{s.outlets > 1 ? ` + ${s.outlets - 1} more` : ''}</small>
           </motion.li>
         ))}
       </ol>

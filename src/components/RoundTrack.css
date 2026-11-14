@@ -27,11 +27,11 @@
 .round-track__stop.is-past .round-track__dot { background: var(--accent); border-color: var(--accent); }
 .round-track__stop.is-sprint .round-track__dot { border-color: var(--sprint); }
 .round-track__stop.is-on { color: var(--text); }
-.round-track__stop.is-on .round-track__num { background: var(--accent); color: #fff; padding: 3px 5px; border-radius: 3px; }
+.round-track__stop.is-on .round-track__num { background: var(--accent); color: var(--on-accent); padding: 3px 5px; border-radius: 3px; }
 .round-track__legend { display: flex; gap: 14px; font-size: 0.75rem; color: var(--muted); }
 .round-track__legend i { display: inline-block; width: 9px; height: 9px; border-radius: 50%; border: 2px solid var(--sprint); margin-right: 5px; vertical-align: -1px; }
 @media (max-width: 560px) {
-  .round-track__stop { font-size: 0.68rem; }
+  .round-track__stop { font-size: 0.75rem; }
   .round-track__stop.is-on .round-track__num { padding: 2px 3px; }
 }
 @media (max-width: 560px) {

@@ -12,6 +12,7 @@ export default async function handler(req, res) {
     const race = await buildRace(season, round);
     sendJSON(res, 200, { ...race, source: 'live' });
   } catch (err) {
-    sendJSON(res, 502, { error: 'upstream_failed', message: String(err.message ?? err) });
+    console.error(err);
+    sendJSON(res, 502, { error: 'upstream_failed' });
   }
 }

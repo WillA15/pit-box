@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { lapTimeToSeconds, lapRecordFrom, lastWinnerFrom, simplify, buildOutline, fastestLap, CIRCUIT_FACTS } from '../../src/lib/f1/circuits.js';
+import { lapTimeToSeconds, lapRecordFrom, lastWinnerFrom, simplify, buildOutline, fastestLap, CIRCUIT_FACTS, polylineLength, pitLaneFraction, MAX_PIT_LAP_FRACTION } from '../../src/lib/f1/circuits.js';
 import { readFileSync } from 'node:fs';
 
 const res = (season, family, time) => ({
@@ -142,5 +142,22 @@ describe('pit lane sanity checks', () => {
     const onTrack = (p) => o.points.some((q) => q[0] === p[0] && q[1] === p[1]);
     expect(onTrack(o.pitLane[0])).toBe(true);
     expect(onTrack(o.pitLane.at(-1))).toBe(true);
+  });
+});
+
+describe('pit lane length', () => {
+  it('measures polylines and the pit lane share of the lap', () => {
+    expect(polylineLength([[0, 0], [3, 4], [3, 10]])).toBe(11);
+    const outline = { points: [[0, 0], [100, 0], [100, 100], [0, 100], [0, 0]], pitLane: [[0, 0], [50, 0]] };
+    expect(pitLaneFraction(outline)).toBeCloseTo(0.125);
+    expect(pitLaneFraction({ points: outline.points })).toBe(0);
+  });
+  it('every saved pit lane is under the length limit for its lap outline', () => {
+    const { circuits } = JSON.parse(readFileSync(new URL('../../public/data/circuits.json', import.meta.url), 'utf8'));
+    for (const [id, c] of Object.entries(circuits)) {
+      if (!c.outline?.pitLane) continue;
+      const share = polylineLength(c.outline.pitLane) / polylineLength(c.outline.points);
+      expect(share, id).toBeLessThan(MAX_PIT_LAP_FRACTION);
+    }
   });
 });

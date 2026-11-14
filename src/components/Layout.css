@@ -9,10 +9,12 @@
 .tab:hover { color: var(--text); }
 .tab--active { color: var(--text); }
 .tab__bar { position: absolute; left: 8px; right: 8px; bottom: -1px; height: 3px; background: var(--accent); border-radius: 2px; }
+main:focus { outline: none; }
 .site-footer { border-top: 1px solid var(--line); padding: 24px 0 40px; font-size: 0.85rem; color: var(--muted); }
 @media (max-width: 720px) {
   .site-header__inner { gap: 0; }
   .site-header__inner { padding-bottom: 6px; }
   .tabs { width: 100%; flex-wrap: wrap; overflow: visible; }
-  .tab { padding: 8px 8px 6px; font-size: 0.85rem; }
+  .tab { display: flex; align-items: center; padding: 10px 8px; font-size: 0.85rem; min-height: 44px; }
+  .site-header { position: static; }
 }

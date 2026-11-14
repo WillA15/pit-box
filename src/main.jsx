@@ -5,6 +5,13 @@ import { MotionConfig } from 'framer-motion';
 import App from './App.jsx';
 import { polyfillCountryFlagEmojis } from 'country-flag-emoji-polyfill';
 import flagFontUrl from 'country-flag-emoji-polyfill/dist/TwemojiCountryFlags.woff2?url';
+// Self-hosted fonts: only the weights the site uses.
+import '@fontsource/barlow/400.css';
+import '@fontsource/barlow/500.css';
+import '@fontsource/barlow/600.css';
+import '@fontsource/barlow-condensed/600.css';
+import '@fontsource/barlow-condensed/800.css';
+import '@fontsource/barlow-condensed/800-italic.css';
 import './styles/global.css';
 
 // Windows has no flag emoji; this loads a small flags-only font (bundled locally) only when needed.

@@ -8,11 +8,14 @@
   --text: #f4f5f7;
   --muted: #9aa1ad;
   --accent: #e10600;
-  --accent-2: #00d2be;
   --sprint: #ffc53d;
   --pit-lane: #ff8fd8;
   --good: #3ddc84;
   --bad: #ff5c5c;
+  --fastest: #c77dff;
+  --trophy: #f5b301;
+  --on-accent: #fff;
+  --on-sprint: #111;
 
   --tyre-soft: #ff3333;
   --tyre-medium: #ffd400;

@@ -53,3 +53,61 @@ describe('createResource without a live URL', () => {
     expect(bad.get().error).toBeTruthy();
   });
 });
+
+describe('liveLoading', () => {
+  it('is true while live is pending, false after it succeeds', async () => {
+    const live = deferred();
+    const r = createResource('/live', '/snap', { fetcher: (u) => (u === '/live' ? live.p : Promise.resolve({ v: 'snap' })) });
+    expect(r.get().liveLoading).toBe(true);
+    live.resolve({ v: 'live' });
+    await tick();
+    expect(r.get().liveLoading).toBe(false);
+  });
+  it('is false after live fails (snapshot stays)', async () => {
+    const r = createResource('/live', '/snap', { fetcher: (u) => (u === '/live' ? Promise.reject(new Error('x')) : Promise.resolve({ v: 1 })) });
+    await tick(); await tick();
+    expect(r.get().liveLoading).toBe(false);
+    expect(r.get().data.source).toBe('snapshot');
+  });
+  it('is false from the start with no live URL', () => {
+    const r = createResource(null, '/snap', { fetcher: async () => ({}) });
+    expect(r.get().liveLoading).toBe(false);
+  });
+});
+
+describe('newer of live and snapshot', () => {
+  const run = async (snapRound, liveRound) => {
+    const live = deferred();
+    const r = createResource('/live', '/snap', {
+      fetcher: (u) => (u === '/live' ? live.p : Promise.resolve({ standingsRound: snapRound })),
+    });
+    await tick();
+    live.resolve(liveRound === undefined ? {} : { standingsRound: liveRound });
+    await tick();
+    return r.get().data;
+  };
+  it('keeps the snapshot when it has a higher standingsRound', async () => {
+    expect((await run(20, 19)).source).toBe('snapshot');
+  });
+  it('prefers live on a tie or a higher round', async () => {
+    expect((await run(19, 19)).source).toBe('live');
+    expect((await run(19, 20)).source).toBe('live');
+  });
+  it('prefers live when the field is missing', async () => {
+    expect((await run(20, undefined)).source).toBe('live');
+  });
+});
+
+describe('retry', () => {
+  it('re-runs both fetches and clears the error', async () => {
+    let fail = true;
+    const r = createResource('/live', '/snap', { fetcher: () => (fail ? Promise.reject(new Error('x')) : Promise.resolve({ v: 1 })) });
+    await tick(); await tick();
+    expect(r.get().error).toBeTruthy();
+    fail = false;
+    r.retry();
+    await tick(); await tick();
+    expect(r.get().error).toBeNull();
+    expect(r.get().data.v).toBe(1);
+  });
+});

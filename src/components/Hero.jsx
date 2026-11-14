@@ -18,7 +18,7 @@ function alreadySeen() {
 export default function Hero({ eyebrow, children }) {
   const reduce = useReducedMotion();
   const [skip] = useState(() => reduce || alreadySeen());
-  const [lit, setLit] = useState(skip ? 0 : 0);
+  const [lit, setLit] = useState(0);
   const [out, setOut] = useState(skip);
 
   useEffect(() => {
@@ -33,17 +33,22 @@ export default function Hero({ eyebrow, children }) {
   }, [skip]);
 
   return (
-    <header className={`hero${out ? ' hero--go' : ''}`}>
+    <header className={`hero${out ? ' hero--go' : ''}${skip ? ' hero--short' : ''}`}>
       <div className="hero__speed" aria-hidden="true" />
-      <div className="hero__lights" aria-hidden="true">
-        {[1, 2, 3, 4, 5].map((n) => (
-          <span key={n} className="hero__pod">
-            <i className={!out && lit >= n ? 'on' : ''} />
-            <i className={!out && lit >= n ? 'on' : ''} />
-          </span>
-        ))}
-      </div>
-      <p className="hero__status" aria-hidden="true">{out ? 'Lights out and away we go' : lit ? `${lit} / 5` : 'Formation lap'}</p>
+      {/* Later visits (and reduced motion) skip the start lights entirely, so the hero is shorter. */}
+      {!skip && (
+        <>
+          <div className="hero__lights" aria-hidden="true">
+            {[1, 2, 3, 4, 5].map((n) => (
+              <span key={n} className="hero__pod">
+                <i className={!out && lit >= n ? 'on' : ''} />
+                <i className={!out && lit >= n ? 'on' : ''} />
+              </span>
+            ))}
+          </div>
+          <p className="hero__status" aria-hidden="true">{out ? 'Lights out and away we go' : lit ? `${lit} / 5` : 'Formation lap'}</p>
+        </>
+      )}
       <motion.div
         className="hero__text"
         initial={skip ? false : { opacity: 0, x: -60, skewX: -8 }}

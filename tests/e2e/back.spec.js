@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { latest } from './season-data.js';
 
 test.beforeEach(async ({ page }) => {
   await page.route('**/api/**', (route) => route.abort());
@@ -15,7 +16,7 @@ test('no back button on the first page you open', async ({ page }) => {
 test('standings → track page → back to standings', async ({ page }) => {
   await page.goto('/standings');
   await page.locator('.round-slider__race-link').click();
-  await expect(page).toHaveURL(/\/tracks\/19$/);
+  await expect(page).toHaveURL(new RegExp(`/tracks/${latest.round}$`));
   await expect(back(page)).toHaveText('← Back to Standings');
   await back(page).click();
   await expect(page).toHaveURL(/\/standings$/);
@@ -24,13 +25,13 @@ test('standings → track page → back to standings', async ({ page }) => {
 
 test('names the previous race or driver, and walks back through several pages', async ({ page }) => {
   await page.goto('/schedule');
-  await page.getByTestId('schedule-row').filter({ hasText: 'Mexico City' }).getByRole('link').click();
+  await page.getByTestId('schedule-row').filter({ hasText: latest.name }).getByRole('link').click();
   await expect(back(page)).toHaveText('← Back to Schedule');
   await page.getByTestId('race-row').first().locator('.rt-strategy').click();
-  await expect(page).toHaveURL(/\/drivers\/max_verstappen$/);
-  await expect(back(page)).toHaveText('← Back to Mexico City Grand Prix');
+  await expect(page).toHaveURL(new RegExp(`/drivers/${latest.results[0].driverId}$`));
+  await expect(back(page)).toHaveText(`← Back to ${latest.name}`);
   await back(page).click();
-  await expect(page).toHaveURL(/\/tracks\/19$/);
+  await expect(page).toHaveURL(new RegExp(`/tracks/${latest.round}$`));
   await expect(back(page)).toHaveText('← Back to Schedule');
 });
 
@@ -84,7 +85,7 @@ test('going back always lands at the top of the previous page', async ({ page })
   await expect(page.getByTestId('standings-row').first()).toBeVisible();
   await scrollDown(page, 1500);
   await page.locator('.round-slider__race-link').evaluate((a) => a.click());
-  await expect(page).toHaveURL(/\/tracks\/19$/);
+  await expect(page).toHaveURL(new RegExp(`/tracks/${latest.round}$`));
   expect(await settledScroll(page)).toBe(0); // new page starts at the top too
   await scrollDown(page, 2000);
   await back(page).click();
@@ -92,19 +93,19 @@ test('going back always lands at the top of the previous page', async ({ page })
   expect(await settledScroll(page)).toBe(0);
 
   // Track → driver profile (clicked from far down the results) → back.
-  await page.goto('/tracks/19');
+  await page.goto(`/tracks/${latest.round}`);
   await page.getByTestId('race-row').nth(15).scrollIntoViewIfNeeded();
   await page.getByTestId('race-row').nth(15).locator('.rt-strategy').click();
   await expect(page).toHaveURL(/\/drivers\//);
   await scrollDown(page, 1500);
   await back(page).click();
-  await expect(page).toHaveURL(/\/tracks\/19$/);
+  await expect(page).toHaveURL(new RegExp(`/tracks/${latest.round}$`));
   expect(await settledScroll(page)).toBe(0);
 
   // The browser's own back button behaves the same way.
   await page.goForward();
   await scrollDown(page, 1500);
   await page.goBack();
-  await expect(page).toHaveURL(/\/tracks\/19$/);
+  await expect(page).toHaveURL(new RegExp(`/tracks/${latest.round}$`));
   expect(await settledScroll(page)).toBe(0);
 });

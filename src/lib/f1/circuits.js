@@ -24,7 +24,7 @@ export const CIRCUIT_FACTS = {
   madring: { layoutSince: 2026, lengthKm: 5.474, corners: 22 },
   baku: { lengthKm: 6.003, corners: 20 },
   sepang: { lengthKm: 5.543, corners: 15 },
-  marina_bay: { layoutSince: 2023, lengthKm: 4.94, corners: 19 },
+  marina_bay: { layoutSince: 2023, lengthKm: 4.927, corners: 19 },
   americas: { layoutSince: 2012, lengthKm: 5.513, corners: 20 },
   rodriguez: { layoutSince: 2015, lengthKm: 4.304, corners: 17 },
   interlagos: { lengthKm: 4.309, corners: 15 },
@@ -216,6 +216,25 @@ export function outlineLooksValid(rows, outline) {
   return distinct >= 120 && outline.points.length >= 30;
 }
 
+/** Length of an [[x, y, …], …] polyline in its own units. */
+export function polylineLength(points) {
+  let n = 0;
+  for (let i = 1; i < (points?.length ?? 0); i++) n += Math.hypot(points[i][0] - points[i - 1][0], points[i][1] - points[i - 1][1]);
+  return n;
+}
+
+// Every real pit lane we've drawn is 10–22% of the lap outline. Longer means the trace includes
+// a stretch of circuit, so the candidate is rejected and the next stop is tried.
+// 0.40, not lower: Interlagos really has a pit road about a third of the lap long (every stop traced
+// in 2025 and 2026 gave 29-34%), so a tighter limit throws away a correct trace.
+export const MAX_PIT_LAP_FRACTION = 0.4;
+
+/** Pit lane length as a fraction of the lap, measured on the drawn outline (snapped ends included). */
+export function pitLaneFraction(outline) {
+  if (!outline?.pitLane) return 0;
+  return polylineLength(outline.pitLane) / Math.max(1e-9, polylineLength(outline.points));
+}
+
 /** Position trace of one ordinary pit stop in the session, trimmed to the pit lane. */
 async function pitLaneRows(session, lapRows, getJSONImpl, log) {
   const pits = await getJSONImpl(`${OPENF1}/pit?session_key=${session.session_key}`);
@@ -231,8 +250,9 @@ async function pitLaneRows(session, lapRows, getJSONImpl, log) {
     try {
       const rows = await getJSONImpl(`${OPENF1}/location?${q}&date>=${encodeURIComponent(from.toISOString())}&date<${encodeURIComponent(to.toISOString())}`);
       const lane = findPitLane(rows, { lapRows });
-      if (lane) return lane;
-      log(`    pit lap ${p.lap_number} #${p.driver_number}: no clear pit lane in trace, trying next`);
+      const share = lane ? pitLaneFraction(buildOutline(lapRows, { pitRows: lane })) : 0;
+      if (lane && share <= MAX_PIT_LAP_FRACTION) return lane;
+      log(`    pit lap ${p.lap_number} #${p.driver_number}: ${lane ? `pit lane is ${Math.round(share * 100)}% of the lap, too long` : 'no clear pit lane in trace'}, trying next`);
     } catch (err) {
       log(`    pit lap ${p.lap_number} #${p.driver_number}: ${err.message}, trying next`);
     }

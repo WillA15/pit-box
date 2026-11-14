@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { next, NOW } from './season-data.js';
 
 test.beforeEach(async ({ page }) => {
   await page.route('**/api/**', (route) => route.abort());
@@ -96,8 +97,8 @@ test('Grand Prix tab shows the starting grid in grid order', async ({ page }) =>
 });
 
 test('upcoming race shows a countdown instead of results', async ({ page }) => {
-  await page.goto('/tracks/20?now=2026-11-04T12:00:00Z');
-  await expect(page.getByRole('heading', { level: 1 })).toContainText('Brazilian Grand Prix');
+  await page.goto(`/tracks/${next.round}?now=${NOW}`);
+  await expect(page.getByRole('heading', { level: 1 })).toContainText(next.name);
   await expect(page.getByRole('timer')).toBeVisible();
   await expect(page.getByText(/appear here after the race/)).toBeVisible();
   await expect(page.getByTestId('race-row')).toHaveCount(0);

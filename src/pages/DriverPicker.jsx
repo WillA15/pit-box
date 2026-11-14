@@ -1,7 +1,8 @@
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { driverList, nationalityFlag } from '../lib/driverStats.js';
-import { teamColor } from '../lib/teams.js';
+import { teamColor, teamShortName } from '../lib/teams.js';
+import { pts } from '../lib/format.js';
 import { useBookmarks } from '../lib/useBookmarks.js';
 import { SourceNote } from '../components/Status.jsx';
 import FollowStar from '../components/FollowStar.jsx';
@@ -50,9 +51,9 @@ function DriverCard({ d, season, i }) {
         </span>
         <span className="driver-card__team muted">
           <span aria-hidden="true">{nationalityFlag(d.nationality)} </span>
-          {season.constructors[d.constructorId]?.name}
+          {teamShortName(d.constructorId, season.constructors[d.constructorId]?.name)}
         </span>
-        <span className="driver-card__pts">{d.standing?.points ?? 0} pts</span>
+        <span className="driver-card__pts">{pts(d.standing?.points ?? 0)}</span>
         <span className="driver-card__star"><FollowStar kind="drivers" id={d.id} label={name} /></span>
       </Link>
     </motion.li>

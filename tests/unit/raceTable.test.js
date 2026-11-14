@@ -29,6 +29,11 @@ describe('buildRaceRows', () => {
   it('labels non-finishers', () => {
     expect(rows.map(resultLabel)).toEqual(['P1', 'P2', 'DNF']);
   });
+  it('flags drivers who did not start', () => {
+    const out = buildRaceRows([{ driverId: 'z', constructorId: 'x', pos: 20, positionText: 'W', grid: 17, points: 0 }]);
+    expect(out[0].dns).toBe(true);
+    expect(rows.some((r) => r.dns)).toBe(false);
+  });
 });
 
 describe('sortRows', () => {

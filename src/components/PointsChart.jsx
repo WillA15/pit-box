@@ -21,10 +21,15 @@ export default function PointsChart({ history, kind, series, t, raceName, animat
   const ticks = history.rounds.map((_, i) => i);
   const maxPts = Math.max(10, ...history[kind][history.rounds.at(-1)].map((r) => r.points));
 
+  // Highest points first, so the legend reads in the same order as the table.
+  const latest = data.at(-1);
+  const ordered = [...series].sort((a, b) => (latest[b.id] ?? 0) - (latest[a.id] ?? 0));
+  const description = `Line chart of championship points after each round for ${ordered.map((s) => s.label).join(', ')}.`;
+
   return (
-    <div className="points-chart" style={{ width: '100%', height: 340 }}>
+    <figure className="points-chart" role="img" aria-label={description} style={{ width: '100%', height: 340, margin: 0 }}>
       <ResponsiveContainer>
-        <LineChart data={data} margin={{ top: 8, right: 16, bottom: 0, left: -8 }}>
+        <LineChart accessibilityLayer={false} data={data} margin={{ top: 8, right: 16, bottom: 0, left: -8 }}>
           <CartesianGrid stroke="var(--line)" vertical={false} />
           <XAxis
             dataKey="x"
@@ -45,7 +50,7 @@ export default function PointsChart({ history, kind, series, t, raceName, animat
             itemSorter={(i) => -i.value}
           />
           <Legend wrapperStyle={{ fontSize: 12 }} />
-          {series.map((s) => (
+          {ordered.map((s) => (
             <Line
               key={s.id}
               dataKey={s.id}
@@ -61,6 +66,6 @@ export default function PointsChart({ history, kind, series, t, raceName, animat
           ))}
         </LineChart>
       </ResponsiveContainer>
-    </div>
+    </figure>
   );
 }

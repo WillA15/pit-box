@@ -1,6 +1,8 @@
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { useLayoutEffect } from 'react';
+import { useEffect, useLayoutEffect, useRef } from 'react';
+import { useSeason } from '../lib/useSeason.js';
+import { pageTitle } from '../lib/pageTitle.js';
 import BackButton from './BackButton.jsx';
 import './Layout.css';
 
@@ -14,10 +16,24 @@ const TABS = [
 
 export default function Layout() {
   const { pathname } = useLocation();
+  const { data: season } = useSeason();
+  const mainRef = useRef(null);
+  const firstLoad = useRef(true);
   // Start every page at the top, before it paints (so there's no flash of the old position).
   // Braces matter: newer browsers return a Promise from scrollTo, which React would treat as a cleanup.
   useLayoutEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, [pathname]);
+
+  // Each page gets its own tab title.
+  useEffect(() => {
+    document.title = pageTitle(pathname, season);
+  }, [pathname, season]);
+
+  // After navigating (not on first load) move keyboard focus to the page, so screen readers notice.
+  useEffect(() => {
+    if (firstLoad.current) { firstLoad.current = false; return; }
+    mainRef.current?.focus({ preventScroll: true });
   }, [pathname]);
 
   return (
@@ -47,7 +63,7 @@ export default function Layout() {
           </nav>
         </div>
       </header>
-      <main id="main" className="wrap">
+      <main id="main" className="wrap" ref={mainRef} tabIndex={-1}>
         <BackButton />
         {/* Each page eases in when you change tab (enter-only, so navigation never waits). */}
         <motion.div key={pathname.split('/')[1] || 'home'} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, ease: 'easeOut' }}>

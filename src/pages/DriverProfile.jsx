@@ -5,6 +5,7 @@ import { seasonStats, teammateHeadToHead, driverList, ageOn, nationalityFlag } f
 import { computeStandingsHistory, championClinch } from '../lib/standingsHistory.js';
 import { rankNewsForDriver } from '../lib/news.js';
 import { teamColor, teamShortName } from '../lib/teams.js';
+import { plural } from '../lib/format.js';
 import { useCareers, useNews } from '../lib/useSeason.js';
 import { getNow } from '../lib/now.js';
 import { SourceNote } from '../components/Status.jsx';
@@ -52,7 +53,7 @@ export default function DriverProfile({ season, driverId }) {
       <motion.header className="driver__hero" key={driverId} initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
         <span className="driver__number" aria-hidden="true">{driver.number}</span>
         <div className="driver__id">
-          <span className="tag">{team?.name}</span>
+          <span className="tag">{teamShortName(driver.constructorId, team?.name)}</span>
           <h1>
             <small>{driver.givenName}</small> {driver.familyName}
             {champion?.id === driverId && <Trophy title={`2026 World Champion, clinched at round ${champion.round}`} size={30} />}
@@ -73,7 +74,7 @@ export default function DriverProfile({ season, driverId }) {
         <h2 id="season-h">2026 season</h2>
         <dl className="stat-tiles driver__stats">
           {[
-            ['Championship', ordinal(stats.position), `${stats.points} points`],
+            ['Championship', ordinal(stats.position), plural(stats.points, 'point')],
             ['Wins', stats.wins, `${stats.starts} starts`],
             ['Podiums', stats.podiums],
             ['Poles', stats.poles],
@@ -105,6 +106,7 @@ export default function DriverProfile({ season, driverId }) {
           <ResultsSparkline rounds={stats.rounds} color={color} />
         </section>
       </div>
+
 
       <Career driverId={driverId} />
       <News driver={driver} teamName={team?.name} />

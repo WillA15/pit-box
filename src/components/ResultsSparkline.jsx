@@ -19,12 +19,14 @@ export default function ResultsSparkline({ rounds, color = 'var(--accent)', fiel
     const ok = CLASSIFIED.test(r.result.positionText ?? '');
     return { ...r, ok, cx: x(i), cy: ok ? y(r.result.pos) : y(fieldSize) };
   });
+  const gap = pts.length > 1 ? (W - padX * 2) / (pts.length - 1) : 28;
+  const hit = Math.min(28, gap);
   const line = nodes.filter((n) => n.ok).map((n, i) => `${i ? 'L' : 'M'}${n.cx} ${n.cy}`).join(' ');
   return (
     <figure className="sparkline">
-      <svg viewBox={`0 0 ${W} ${H + 22}`} role="img" aria-label={`Finishing positions: ${nodes.map((n) => `round ${n.round} ${n.ok ? `P${n.result.pos}` : 'DNF'}`).join(', ')}`}>
+      <svg viewBox={`0 0 ${W} ${H + 22}`} role="group" aria-label="Finishing position by round">
         {[1, 3, 10].map((p) => (
-          <g key={p}>
+          <g key={p} aria-hidden="true">
             <line className="sparkline__grid" x1={padX} x2={W - padX} y1={y(p)} y2={y(p)} />
             <text className="sparkline__axis" x={4} y={y(p) + 4}>P{p}</text>
           </g>
@@ -39,6 +41,8 @@ export default function ResultsSparkline({ rounds, color = 'var(--accent)', fiel
         />
         {nodes.map((n, i) => (
           <Link key={n.round} to={`/tracks/${n.round}`} aria-label={`Round ${n.round} ${n.name}: ${n.ok ? `P${n.result.pos}` : n.result.status}`}>
+            {/* Invisible tap area: full chart height, never wider than the gap between rounds */}
+            <rect x={n.cx - hit / 2} y={0} width={hit} height={H + 22} fill="transparent" />
             <title>{`R${n.round} ${n.name}: ${n.ok ? `P${n.result.pos}` : `DNF (${n.result.status})`}`}</title>
             <motion.g initial={reduce ? false : { opacity: 0, scale: 0 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.2 + i * 0.05 }} style={{ transformOrigin: `${n.cx}px ${n.cy}px` }}>
               {n.ok ? (

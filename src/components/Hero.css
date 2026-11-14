@@ -30,6 +30,8 @@
   background: conic-gradient(#fff 25%, #111 0 50%, #fff 0 75%, #111 0) 0 0 / 14px 14px;
   opacity: 0.85;
 }
+/* No light gantry: tighten the top padding. */
+.hero--short { padding-top: 24px; }
 @media (max-width: 560px) {
   .hero { padding: 24px 18px 40px; }
   .hero__pod i { width: 16px; height: 16px; }

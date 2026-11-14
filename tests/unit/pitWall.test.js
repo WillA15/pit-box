@@ -11,12 +11,17 @@ describe('driverSummary (real data)', () => {
   it('latest race is the most recent completed round', () => {
     const last = season.races.filter((r) => r.results.length).at(-1);
     expect(s.latest.round).toBe(last.round);
-    expect(s.latest.label).toBe('P1'); // won Mexico City
+    // Compare with the result row itself, so this keeps passing as new rounds are added.
+    const row = last.results.find((r) => r.driverId === 'max_verstappen');
+    expect(s.latest.label).toBe(`P${row.pos}`);
   });
   it('keeps the last five results and a points trend ending at the standings total', () => {
     expect(s.recent).toHaveLength(5);
     expect(s.trend.at(-1).points).toBe(s.standing.points);
-    expect(s.lastRoundPoints).toBe(25);
+    const lastRace = season.races.filter((r) => r.results.length).at(-1);
+    const gp = lastRace.results.find((r) => r.driverId === 'max_verstappen')?.points ?? 0;
+    const sprint = lastRace.sprintResults.find((r) => r.driverId === 'max_verstappen')?.points ?? 0;
+    expect(s.lastRoundPoints).toBe(gp + sprint);
   });
 });
 

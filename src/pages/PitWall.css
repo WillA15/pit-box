@@ -8,7 +8,7 @@
 .pw-next { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; border-left: 6px solid var(--accent); }
 .pw-next h2 { margin: 8px 0 2px; font-style: italic; }
 .pw-next p { margin: 0 0 10px; }
-.pw-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+.pw-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
 .pw-card {
   display: grid; gap: 10px; padding: 16px; border-radius: var(--radius); border: 1px solid var(--line); border-top: 4px solid var(--team);
   background: linear-gradient(160deg, color-mix(in srgb, var(--team) 16%, var(--surface)) 0%, var(--surface) 55%);
@@ -22,14 +22,14 @@ a.pw-card__name:hover { color: var(--accent); }
 .pw-card__nums { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
 .pw-card__nums div { background: var(--bg); padding: 8px; border-radius: 4px; }
 .pw-card__nums b { display: block; font: 800 1.35rem/1 var(--font-head); font-variant-numeric: tabular-nums; }
-.pw-card__nums small { font: 600 0.65rem/1 var(--font-head); text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
+.pw-card__nums small { font: 600 0.75rem/1 var(--font-head); text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); }
 .pw-card__latest { margin: 0; font-size: 0.88rem; }
 .pw-card__latest a { color: inherit; }
 .pw-card__latest .up { color: var(--good); }
 .pw-card__latest .down { color: var(--bad); }
 .pw-form { list-style: none; display: flex; gap: 4px; margin: 0; padding: 0; }
 .pw-form li { flex: 1; text-align: center; padding: 4px 0; background: var(--surface-raised); font: 800 0.8rem/1 var(--font-head); border-radius: 3px; }
-.pw-form li.is-podium { background: color-mix(in srgb, #f5b301 30%, var(--surface-raised)); }
+.pw-form li.is-podium { background: color-mix(in srgb, var(--trophy) 30%, var(--surface-raised)); }
 .pw-form li.is-dnf { color: var(--bad); }
 .pw-news { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
 .pw-news li { display: grid; grid-template-columns: 9rem 1fr auto; gap: 12px; align-items: baseline; padding: 10px 12px; background: var(--surface); }

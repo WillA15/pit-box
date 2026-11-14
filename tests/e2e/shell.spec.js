@@ -31,3 +31,14 @@ test('unknown routes show the not-found page', async ({ page }) => {
   await page.goto('/nope');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Off track');
 });
+
+test('each page has its own document title', async ({ page }) => {
+  const titles = [];
+  for (const [path, pattern] of [['/standings', /Standings/], ['/tracks/1', /Australian Grand Prix/], ['/drivers/antonelli', /Antonelli/]]) {
+    await page.goto(path);
+    // Titles for data-driven pages are set once the season data has loaded.
+    await expect(page).toHaveTitle(pattern);
+    titles.push(await page.title());
+  }
+  expect(new Set(titles).size).toBe(3);
+});

@@ -5,10 +5,14 @@ const SHORT = { SOFT: 'S', MEDIUM: 'M', HARD: 'H', INTERMEDIATE: 'I', WET: 'W' }
 const CSS = { SOFT: 'soft', MEDIUM: 'medium', HARD: 'hard', INTERMEDIATE: 'inter', WET: 'wet' };
 
 /** One driver's race as tyre stints laid out across the race distance. */
-export default function StrategyStrip({ stints = [], pits = [], totalLaps, delay = 0, label }) {
+// Raw API wording is not shown to readers.
+const compoundName = (c) => (CSS[c] ? c.toLowerCase() : 'not recorded');
+
+export default function StrategyStrip({ stints = [], pits = [], totalLaps, delay = 0, label, hasDetail = false }) {
   const reduce = useReducedMotion();
+  if (!stints.length && hasDetail) return <span className="strip strip--empty muted">No laps completed</span>;
   if (!stints.length || !totalLaps) return <span className="strip strip--empty muted">No tyre data</span>;
-  const desc = stints.map((s) => `${s.compound.toLowerCase()} laps ${s.lapStart}–${s.lapEnd}`).join(', ');
+  const desc = stints.map((s) => `${compoundName(s.compound)} laps ${s.lapStart}–${s.lapEnd}`).join(', ');
   return (
     <div className="strip" role="img" aria-label={`${label ? `${label}: ` : ''}${desc}`}>
       {stints.map((s, i) => {
@@ -23,7 +27,7 @@ export default function StrategyStrip({ stints = [], pits = [], totalLaps, delay
             initial={reduce ? false : { scaleX: 0 }}
             animate={{ scaleX: 1 }}
             transition={{ duration: 0.55, delay: delay + i * 0.35, ease: 'easeOut' }}
-            title={`${s.compound}${used ? ` (used, ${s.tyreAge} laps old)` : ' (new)'} · laps ${s.lapStart}–${s.lapEnd}`}
+            title={`${CSS[s.compound] ? s.compound : 'Not recorded'}${used ? ` (used, ${s.tyreAge} laps old)` : ' (new)'} · laps ${s.lapStart}–${s.lapEnd}`}
           >
             {width > 7 && <b>{SHORT[s.compound] ?? '?'}</b>}
           </motion.span>

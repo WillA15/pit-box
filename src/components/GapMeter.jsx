@@ -1,6 +1,7 @@
 import { useId } from 'react';
 import { motion } from 'framer-motion';
 import { teamColor } from '../lib/teams.js';
+import { pts } from '../lib/format.js';
 import Trophy from './Trophy.jsx';
 import './GapMeter.css';
 
@@ -25,7 +26,7 @@ export default function GapMeter({ fight, nameOf, colorOf, title, raceName }) {
           </span>
         ) : (
           <span className="gap-meter__status">
-            {fight.remaining} pts left
+            {pts(fight.remaining)} left
           </span>
         )}
       </div>

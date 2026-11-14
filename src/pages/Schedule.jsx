@@ -20,7 +20,9 @@ const FILTER_OPTIONS = [
   { value: 'sprint', label: 'Sprint weekends' },
 ];
 
-const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+// A readable zone name ("Eastern Standard Time"), falling back to the id ("America/New_York").
+const tzId = Intl.DateTimeFormat().resolvedOptions().timeZone;
+const tz = new Intl.DateTimeFormat(undefined, { timeZoneName: 'long' }).formatToParts(new Date()).find((part) => part.type === 'timeZoneName')?.value ?? tzId;
 const fmtSession = new Intl.DateTimeFormat(undefined, { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
 
 export default function Schedule() {

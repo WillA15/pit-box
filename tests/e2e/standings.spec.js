@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { latest, completedCount, driverCount, constructorCount, season } from './season-data.js';
 
 test.beforeEach(async ({ page }) => {
   await page.route('**/api/**', (route) => route.abort());
@@ -9,10 +10,10 @@ test.beforeEach(async ({ page }) => {
 const firstName = (page) => page.getByTestId('standings-row').first().locator('.standings__name a, .standings__name').first();
 
 test('shows drivers then constructors', async ({ page }) => {
-  await expect(page.getByTestId('standings-row')).toHaveCount(24);
+  await expect(page.getByTestId('standings-row')).toHaveCount(driverCount);
   await page.getByRole('button', { name: 'Constructors' }).click();
-  await expect(page.getByTestId('standings-row')).toHaveCount(11);
-  await expect(page.getByTestId('standings-row').first()).toContainText('Mercedes');
+  await expect(page.getByTestId('standings-row')).toHaveCount(constructorCount);
+  await expect(page.getByTestId('standings-row').first()).toContainText(season.constructors[season.constructorStandings[0].constructorId].name);
 });
 
 test('round picker rewinds the championship', async ({ page }) => {
@@ -20,14 +21,14 @@ test('round picker rewinds the championship', async ({ page }) => {
   await page.getByRole('button', { name: 'Round 1: Australian Grand Prix' }).click();
   await expect(page.getByText('After round 1', { exact: true })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Australian Grand Prix' })).toBeVisible();
-  // Round 1 has fewer points on the board than round 19.
+  // Round 1 has fewer points on the board than the latest round.
   const pts = Number(await page.getByTestId('standings-row').first().locator('.standings__pts').innerText());
   expect(pts).toBeLessThanOrEqual(25 + 8);
   expect(latestLeader).toBeTruthy();
 });
 
 test('keyboard arrows step a whole round at a time', async ({ page }) => {
-  await page.getByRole('button', { name: /^Round 19:/ }).focus();
+  await page.getByRole('button', { name: new RegExp(`^Round ${latest.round}:`) }).focus();
   await page.keyboard.press('Home');
   await expect(page.getByRole('button', { name: /^Round 1:/ })).toBeFocused();
   await expect(page.getByText('After round 1', { exact: true })).toBeVisible();
@@ -41,8 +42,8 @@ test('dragging along the track snaps to rounds', async ({ page }) => {
   const box = await track.boundingBox();
   await page.mouse.move(box.x + box.width - 5, box.y + 20);
   await page.mouse.down();
-  // Drag to the 3rd of 19 columns.
-  await page.mouse.move(box.x + (box.width / 19) * 2.5, box.y + 20, { steps: 8 });
+  // Drag to the 3rd of the completed-round columns.
+  await page.mouse.move(box.x + (box.width / completedCount) * 2.5, box.y + 20, { steps: 8 });
   await page.mouse.up();
   await expect(page.getByText('After round 3', { exact: true })).toBeVisible();
 });
@@ -57,11 +58,11 @@ test('replay plays race by race, with a speed control', async ({ page }) => {
   await expect(page.getByRole('button', { name: /Replay season/ })).toBeVisible();
 });
 
-test('following a driver persists and powers the bookmarked filter', async ({ page }) => {
+test('following a driver persists and powers the followed filter', async ({ page }) => {
   await page.getByRole('button', { name: 'Follow Lando Norris' }).click();
   await expect(page.getByRole('button', { name: 'Unfollow Lando Norris' })).toHaveAttribute('aria-pressed', 'true');
   await page.reload();
-  await page.getByLabel('Bookmarked only').check();
+  await page.getByLabel('Followed only').check();
   await expect(page.getByTestId('standings-row')).toHaveCount(1);
   await expect(page.getByTestId('standings-row')).toContainText('Lando Norris');
   // Constructors list has its own bookmarks: none yet.
@@ -70,7 +71,7 @@ test('following a driver persists and powers the bookmarked filter', async ({ pa
 });
 
 test('the thumb and fill line up with the selected round dot', async ({ page }) => {
-  for (const round of [1, 7, 13, 19]) {
+  for (const round of [1, 7, 13, latest.round]) {
     await page.getByRole('button', { name: new RegExp(`^Round ${round}:`) }).click();
     await page.waitForTimeout(1000); // let the snap animation finish
     const m = await page.evaluate((i) => {
@@ -87,8 +88,8 @@ test('the thumb and fill line up with the selected round dot', async ({ page }) 
 });
 
 test('opens on the latest round', async ({ page }) => {
-  await expect(page.getByText('After round 19', { exact: true })).toBeVisible();
-  await expect(page.getByRole('button', { name: /^Round 19:/ })).toHaveAttribute('aria-pressed', 'true');
+  await expect(page.getByText(`After round ${latest.round}`, { exact: true })).toBeVisible();
+  await expect(page.getByRole('button', { name: new RegExp(`^Round ${latest.round}:`) })).toHaveAttribute('aria-pressed', 'true');
 });
 
 test('champion trophy appears from the clinching round onwards', async ({ page }) => {
@@ -99,7 +100,7 @@ test('champion trophy appears from the clinching round onwards', async ({ page }
   await page.getByRole('button', { name: /^Round 18:/ }).click();
   await expect(page.getByText('After round 18', { exact: true })).toBeVisible();
   await expect(page.getByRole('img', { name: /World Champion/ })).toHaveCount(0);
-  // No constructors' champion yet.
+  // No constructors' champion yet: that title was clinched at a later round than 19.
   await page.getByRole('button', { name: /^Round 19:/ }).click();
   await page.getByRole('button', { name: 'Constructors' }).click();
   await expect(page.getByRole('img', { name: /World Champion/ })).toHaveCount(0);
@@ -107,7 +108,7 @@ test('champion trophy appears from the clinching round onwards', async ({ page }
 
 test('the race name links to its track page, rising and turning red on hover', async ({ page, isMobile }) => {
   const link = page.locator('.round-slider__race-link');
-  await expect(link).toHaveText('Mexico City Grand Prix');
+  await expect(link).toHaveText(latest.name);
   if (!isMobile) {
     await link.hover();
     await expect.poll(() => link.evaluate((el) => getComputedStyle(el).color)).toBe('rgb(225, 6, 0)');

@@ -5,6 +5,7 @@ import { useBookmarks } from '../lib/useBookmarks.js';
 import { computeStandingsHistory } from '../lib/standingsHistory.js';
 import { driverSummary, teamSummary } from '../lib/pitWall.js';
 import { teamColor, teamShortName } from '../lib/teams.js';
+import { pts } from '../lib/format.js';
 import './PitWallPreview.css';
 
 /** Compact strip of what the visitor follows, for the landing page. */
@@ -30,7 +31,7 @@ export default function PitWallPreview({ season }) {
     }),
     ...bm.teams.filter((id) => season.constructors[id]).map((id) => {
       const s = teamSummary(season, history, id);
-      return { key: `t-${id}`, to: '/pit-wall', name: teamShortName(id, season.constructors[id].name), color: teamColor(id), pos: s.standing?.pos, pts: s.standing?.points ?? 0, last: s.latest ? `${s.latest.points} pts` : null };
+      return { key: `t-${id}`, to: '/pit-wall', name: teamShortName(id, season.constructors[id].name), color: teamColor(id), pos: s.standing?.pos, pts: s.standing?.points ?? 0, last: s.latest ? pts(s.latest.points) : null };
     }),
   ].slice(0, 6);
   return (
@@ -44,7 +45,7 @@ export default function PitWallPreview({ season }) {
           <motion.li key={it.key} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06 }}>
             <Link to={it.to} className="pwp__item" style={{ '--team': it.color }}>
               <b>{it.name}</b>
-              <span>{it.pos ? `P${it.pos}` : '–'} · {it.pts} pts</span>
+              <span>{it.pos ? `P${it.pos}` : '–'} · {pts(it.pts)}</span>
               {it.last && <small className="muted">Last race: {it.last}</small>}
             </Link>
           </motion.li>

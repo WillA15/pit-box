@@ -1,4 +1,5 @@
 .start-grid { margin: 0; }
+.start-grid__title { font: inherit; margin: 0; }
 .start-grid figcaption { font: 800 1.1rem/1 var(--font-head); text-transform: uppercase; margin-bottom: 10px; }
 .start-grid__boxes { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 6px 18px; max-width: 360px; }
 .start-grid__box {

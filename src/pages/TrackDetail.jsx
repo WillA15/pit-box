@@ -3,7 +3,8 @@ import { motion } from 'framer-motion';
 import { useSeason, useRace, useCircuits } from '../lib/useSeason.js';
 import { raceState, podium } from '../lib/schedule.js';
 import { flag } from '../lib/flags.js';
-import { teamColor } from '../lib/teams.js';
+import { teamColor, teamShortName } from '../lib/teams.js';
+import { plural } from '../lib/format.js';
 import { getNow } from '../lib/now.js';
 import { Loading, LoadError, SourceNote } from '../components/Status.jsx';
 import TrackMap from '../components/TrackMap.jsx';
@@ -13,7 +14,7 @@ import RaceTable from '../components/RaceTable.jsx';
 import StartingGrid from '../components/StartingGrid.jsx';
 import './TrackDetail.css';
 
-const fmtDate = new Intl.DateTimeFormat(undefined, { weekday: 'short', month: 'long', day: 'numeric', year: 'numeric' });
+const fmtDate = new Intl.DateTimeFormat(undefined, { weekday: 'short', month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
 
 export default function TrackDetail() {
   const { round } = useParams();
@@ -56,7 +57,7 @@ function TrackBody({ season, race }) {
           <span className="tag">Round {race.round}</span>
           {race.sprint && <span className="tag tag--sprint">Sprint weekend</span>}
           <h1><span aria-hidden="true">{flag(race.country)} </span>{race.name}</h1>
-          <p className="muted">{race.circuitName} · {race.locality}, {race.country} · {fmtDate.format(new Date(race.start))}</p>
+          <p className="muted">{race.circuitName} · {race.locality}, {race.country} · {fmtDate.format(new Date(race.date ? `${race.date}T12:00:00Z` : race.start))}</p>
         </div>
         <SourceNote data={season} />
       </header>
@@ -84,8 +85,10 @@ function TrackBody({ season, race }) {
 
       {!hasResults && (
         <div className="panel track__upcoming">
-          {state === 'upcoming' || state === 'live' ? (
+          {state === 'upcoming' ? (
             <Countdown to={race.start} label="Race starts in" />
+          ) : state === 'live' ? (
+            <p>Race under way. Results appear here after the chequered flag.</p>
           ) : (
             <p>The race has finished. Results will appear here shortly.</p>
           )}
@@ -124,17 +127,20 @@ function CircuitFacts({ circuit, race }) {
     ['First Grand Prix', circuit?.firstGrandPrix ?? '–'],
   ];
   return (
-    <dl className="stat-tiles track__facts">
-      {facts.map(([label, value, sub]) => (
-        <div className="stat-tile" key={label}>
-          <dt className="stat-tile__label">{label}</dt>
-          <dd className="stat-tile__value">
-            {value}
-            {sub && <span className="stat-tile__sub">{sub}</span>}
-          </dd>
-        </div>
-      ))}
-    </dl>
+    <>
+      <h2 className="sr-only">Circuit facts</h2>
+      <dl className="stat-tiles track__facts">
+        {facts.map(([label, value, sub]) => (
+          <div className="stat-tile" key={label}>
+            <dt className="stat-tile__label">{label}</dt>
+            <dd className="stat-tile__value">
+              {value}
+              {sub && <span className="stat-tile__sub">{sub}</span>}
+            </dd>
+          </div>
+        ))}
+      </dl>
+    </>
   );
 }
 
@@ -197,12 +203,13 @@ function QuickStats({ season, race, results, detail, kind }) {
     ? { who: name(detail.fastest.driverId), time: detail.fastest.time, lap: detail.fastest.lap }
     : fastestJolpica && { who: name(fastestJolpica.driverId), time: fastestJolpica.fastestLap.time, lap: fastestJolpica.fastestLap.lap };
   const rc = detail?.raceControl;
+  const team = (id) => teamShortName(id, season.constructors[id]?.name);
   const tiles = [
-    ['Winner', winner ? name(winner.driverId) : '–', winner && (winner.time ? `${season.constructors[winner.constructorId]?.name} · ${winner.time}` : season.constructors[winner.constructorId]?.name), winner && teamColor(winner.constructorId)],
-    [kind === 'Sprint' ? 'Sprint pole' : 'Pole position', pole ? name(pole.driverId) : '–', pole && season.constructors[pole.constructorId]?.name, pole && teamColor(pole.constructorId)],
+    ['Winner', winner ? name(winner.driverId) : '–', winner && (winner.time ? `${team(winner.constructorId)} · ${winner.time}` : team(winner.constructorId)), winner && teamColor(winner.constructorId)],
+    [kind === 'Sprint' ? 'Sprint pole' : 'Pole position', pole ? name(pole.driverId) : '–', pole && team(pole.constructorId), pole && teamColor(pole.constructorId)],
     ['Fastest lap', fastest ? fastest.time : '–', fastest && `${fastest.who}, lap ${fastest.lap}`],
-    ['Pit stops', detail ? detail.totalStops : '–', detail && `${detail.strategies.filter((s) => s.stopCount === 1).length} drivers one-stopped`],
-    ['Safety cars', rc ? rc.safetyCars : '–', rc && `${rc.virtualSafetyCars} VSC · ${rc.redFlags} red flag${rc.redFlags === 1 ? '' : 's'}`],
+    ['Pit stops', detail ? detail.totalStops : '–', detail && `${plural(detail.strategies.filter((s) => s.stopCount === 1).length, 'driver')} one-stopped`],
+    ['Safety cars', rc ? rc.safetyCars : '–', rc && `${rc.virtualSafetyCars > 0 ? `${rc.virtualSafetyCars} VSC · ` : ''}${rc.redFlags} red flag${rc.redFlags === 1 ? '' : 's'}`],
   ];
   return (
     <dl className="stat-tiles quick-stats" aria-label={`${kind} quick stats`}>

@@ -1,18 +1,20 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { useSeason } from '../lib/useSeason.js';
 import { useBookmarks } from '../lib/useBookmarks.js';
 import { computeStandingsHistory, interpolateStandings, championClinch } from '../lib/standingsHistory.js';
 import { useTween } from '../lib/useTween.js';
-import { teamColor } from '../lib/teams.js';
+import { teamColor, teamShortName } from '../lib/teams.js';
 import { Loading, LoadError, SourceNote } from '../components/Status.jsx';
 import Segmented from '../components/Segmented.jsx';
 import FollowStar from '../components/FollowStar.jsx';
-import PointsChart from '../components/PointsChart.jsx';
 import RoundTrack from '../components/RoundTrack.jsx';
 import Trophy from '../components/Trophy.jsx';
 import './Standings.css';
+
+// The chart library is big, so it loads only when this page needs it.
+const PointsChart = lazy(() => import('../components/PointsChart.jsx'));
 
 const KIND_OPTIONS = [
   { value: 'drivers', label: 'Drivers' },
@@ -156,7 +158,7 @@ function StandingsBody({ season }) {
   const shown = onlyFollowed ? rows.filter((r) => followed.includes(r.id)) : rows;
 
   const nameOf = (id) => {
-    if (kind === 'constructors') return season.constructors[id]?.name ?? id;
+    if (kind === 'constructors') return teamShortName(id, season.constructors[id]?.name);
     const d = season.drivers[id];
     return d ? `${d.givenName} ${d.familyName}` : id;
   };
@@ -172,7 +174,7 @@ function StandingsBody({ season }) {
     seenTeams.add(team);
     return {
       id,
-      label: kind === 'drivers' ? season.drivers[id]?.code ?? id : season.constructors[id]?.name ?? id,
+      label: kind === 'drivers' ? season.drivers[id]?.code ?? id : teamShortName(id, season.constructors[id]?.name),
       color: teamColor(team),
       dashed,
       highlight: followed.includes(id),
@@ -185,7 +187,7 @@ function StandingsBody({ season }) {
         <Segmented label="Standings type" options={KIND_OPTIONS} value={kind} onChange={setKind} />
         <label className="check">
           <input type="checkbox" checked={onlyFollowed} onChange={(e) => setOnlyFollowed(e.target.checked)} />
-          Bookmarked only
+          Followed only
         </label>
       </div>
 
@@ -263,7 +265,7 @@ function StandingsBody({ season }) {
                   ) : (
                     nameOf(r.id)
                   )}
-                  {kind === 'drivers' && <small className="muted">{season.constructors[r.constructorId]?.name}</small>}
+                  {kind === 'drivers' && <small className="muted">{teamShortName(r.constructorId, season.constructors[r.constructorId]?.name)}</small>}
                   {isChampion && (
                     <Trophy
                       title={`2026 ${kind === 'drivers' ? "Drivers'" : "Constructors'"} World Champion, clinched at the ${clinchRace?.name} (round ${champ.round})`}
@@ -283,6 +285,7 @@ function StandingsBody({ season }) {
       <div className="panel">
         <h2>Points progression</h2>
         <p className="muted">Top 5 after round {round}, plus anyone you follow. Dashed lines are second drivers in a team.</p>
+        <Suspense fallback={null}>
         <PointsChart
           history={history}
           kind={kind}
@@ -291,6 +294,7 @@ function StandingsBody({ season }) {
           animate={!playing && Number.isInteger(t)}
           raceName={(r) => season.races.find((x) => x.round === r)?.name}
         />
+        </Suspense>
       </div>
     </>
   );

@@ -3,7 +3,7 @@
 .race-table th { text-align: left; font: 600 0.72rem/1 var(--font-head); text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); padding: 6px 8px; white-space: nowrap; }
 .race-table th button { all: unset; cursor: pointer; }
 .race-table th button:hover, .race-table th[aria-sort] button { color: var(--text); }
-.race-table th button:focus-visible { outline: 2px solid var(--accent); }
+.race-table th button:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
 .race-table td { background: var(--surface); padding: 8px; vertical-align: middle; }
 .race-table tbody tr:nth-child(even) td { background: var(--surface-raised); }
 .race-table td:first-child { border-left: 3px solid var(--team); }
@@ -34,8 +34,11 @@
     background: var(--surface); border-left: 3px solid var(--team); padding: 8px 10px;
   }
   .race-table tbody tr:nth-child(even) { background: var(--surface-raised); }
-  .race-table td, .race-table tbody tr:nth-child(even) td { background: none; padding: 0; border: 0 !important; width: auto; min-width: 0; }
-  .rt-pos { order: 1; width: 2.6rem !important; }
+  .race-table td, .race-table tbody tr:nth-child(even) td { background: none; padding: 0; width: auto; min-width: 0; }
+  /* Same or higher specificity than the desktop first-column border, so no !important is needed. */
+  .race-table tbody tr td, .race-table tbody tr td:first-child, .race-table tbody tr:nth-child(even) td { border: 0; }
+  .race-table tbody tr td.rt-pos { width: 2.6rem; }
+  .rt-pos { order: 1; }
   .rt-driver { order: 2; flex: 1; }
   .rt-points { order: 3; }
   .rt-follow { order: 4; }

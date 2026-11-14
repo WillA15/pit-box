@@ -28,7 +28,10 @@ export async function buildCareers(season, { getJSONImpl = getJSON, clinchedCham
     const wins = await total(getJSONImpl, `drivers/${id}/results/1`);
     const p2 = await total(getJSONImpl, `drivers/${id}/results/2`);
     const p3 = await total(getJSONImpl, `drivers/${id}/results/3`);
-    const poles = await total(getJSONImpl, `drivers/${id}/qualifying/1`);
+    // Poles = races started from grid slot 1. Jolpica's `qualifying/1` filter is not usable here:
+    // it matches a driver who topped ANY qualifying segment (Q1, Q2 or Q3), not just the final
+    // order, so it over-counts (Hamilton 120 instead of 105 after the 2026 Mexico City GP).
+    const poles = await total(getJSONImpl, `drivers/${id}/grid/1/results`);
     const seasons = seasonsById[id];
     const champs = Object.entries(championOf).filter(([, who]) => who === id).map(([y]) => Number(y)).sort();
     out[id] = {

@@ -6,6 +6,7 @@ export default async function handler(req, res) {
     const season = await getSeasonCached(2026);
     sendJSON(res, 200, { ...season, source: 'live' });
   } catch (err) {
-    sendJSON(res, 502, { error: 'upstream_failed', message: String(err.message ?? err) });
+    console.error(err);
+    sendJSON(res, 502, { error: 'upstream_failed' });
   }
 }

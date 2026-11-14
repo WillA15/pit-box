@@ -28,6 +28,8 @@ export function buildRaceRows(results, strategies = []) {
       status: r.status,
       grid: r.grid,
       pitLaneStart: r.grid === 0,
+      // W / F in Jolpica's positionText means the driver did not start.
+      dns: r.positionText === 'W' || r.positionText === 'F',
       gained: classified && grid ? grid - r.pos : null,
       points: r.points,
       time: r.time,

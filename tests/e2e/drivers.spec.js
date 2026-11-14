@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { latest, season } from './season-data.js';
 
 test.beforeEach(async ({ page }) => {
   await page.route('**/api/**', (route) => route.abort());
@@ -37,11 +38,11 @@ test('teammate head-to-head, results chart and career totals render', async ({ p
   const h2h = page.getByTestId('h2h').first();
   await expect(h2h).toContainText('Russell');
   await expect(h2h.getByLabel(/^Qualifying:/)).toBeVisible();
-  await expect(page.getByRole('img', { name: /^Finishing positions:/ })).toBeVisible();
+  await expect(page.getByRole('group', { name: 'Finishing position by round' })).toBeVisible();
   await expect(page.locator('.career-strip')).toContainText('Titles');
   // Clicking a result in the chart opens that race.
-  await page.getByRole('link', { name: /^Round 19 Mexico City Grand Prix/ }).click();
-  await expect(page).toHaveURL(/\/tracks\/19$/);
+  await page.getByRole('link', { name: new RegExp(`^Round ${latest.round} ${latest.name}`) }).click();
+  await expect(page).toHaveURL(new RegExp(`/tracks/${latest.round}$`));
 });
 
 test('three news stories link out to their sources', async ({ page }) => {

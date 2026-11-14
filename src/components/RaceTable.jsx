@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { buildRaceRows, sortRows, resultLabel } from '../lib/raceTable.js';
-import { teamColor } from '../lib/teams.js';
+import { teamColor, teamShortName } from '../lib/teams.js';
 import { useBookmarks } from '../lib/useBookmarks.js';
 import StrategyStrip, { CompoundLegend } from './StrategyStrip.jsx';
 import FollowStar from './FollowStar.jsx';
@@ -112,20 +112,20 @@ export default function RaceTable({ season, results, detail, variant = 'race', c
                         className={`rt-fav rt-fav--${level}`}
                         role="img"
                         aria-label={level === 'driver' ? 'You follow this driver' : 'You follow this team'}
-                        title={level === 'driver' ? 'You follow this driver' : `You follow ${season.constructors[r.constructorId]?.name}`}
+                        title={level === 'driver' ? 'You follow this driver' : `You follow ${teamShortName(r.constructorId, season.constructors[r.constructorId]?.name)}`}
                       >
                         ★
                       </span>
                     )}
                   </span>
-                  <small className="muted">{season.constructors[r.constructorId]?.name}{!r.classified && r.status ? ` · ${r.status}` : ''}</small>
+                  <small className="muted">{teamShortName(r.constructorId, season.constructors[r.constructorId]?.name)}{!r.classified && r.status ? ` · ${r.status}` : ''}</small>
                 </td>
-                <td className="rt-grid" data-label="Started">{r.pitLaneStart ? 'Pit lane' : r.grid ?? '–'}</td>
+                <td className="rt-grid" data-label="Started">{r.dns ? '–' : r.pitLaneStart ? 'Pit lane' : r.grid ?? '–'}</td>
                 <td className={`rt-gained ${r.gained > 0 ? 'up' : r.gained < 0 ? 'down' : ''}`} data-label="+/−">
                   {r.gained == null ? '–' : r.gained > 0 ? `▲${r.gained}` : r.gained < 0 ? `▼${-r.gained}` : '='}
                 </td>
                 <td className="rt-strategy">
-                  <StrategyStrip stints={r.stints} pits={r.pits} totalLaps={totalLaps} delay={Math.min(i * 0.06, 1.2)} label={name} />
+                  <StrategyStrip hasDetail={Boolean(detail)} stints={r.stints} pits={r.pits} totalLaps={totalLaps} delay={Math.min(i * 0.06, 1.2)} label={name} />
                 </td>
                 {variant === 'race' && <td className="rt-stops" data-label="Stops">{r.stops ?? '–'}</td>}
                 {/* Only the driver who set the fastest lap of the session gets a time here. */}
