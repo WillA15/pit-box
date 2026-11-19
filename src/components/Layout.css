@@ -2,8 +2,13 @@
 .skip-link:focus { left: 16px; top: 8px; z-index: 10; background: var(--accent); padding: 6px 10px; }
 .site-header { border-top: 4px solid var(--accent); background: var(--surface); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 5; }
 .site-header__inner { display: flex; align-items: center; gap: 24px; flex-wrap: wrap; min-height: 60px; }
-.logo { font: italic 800 1.8rem/1 var(--font-head); text-decoration: none; letter-spacing: 0.02em; }
-.logo span { color: var(--accent); }
+.logo { text-decoration: none; display: inline-flex; }
+.logo-lockup { display: inline-flex; align-items: center; gap: 8px; }
+.logo-mark { display: block; flex-shrink: 0; }
+.logo-word { font: italic 800 1.7rem/1 var(--font-head); letter-spacing: 0.02em; white-space: nowrap; }
+.logo-word span { color: var(--accent); }
+.logo:hover .logo-mark { transform: translateX(2px); }
+.logo-mark { transition: transform 0.2s; }
 .tabs { list-style: none; display: flex; gap: 4px; margin: 0; padding: 0; overflow-x: auto; scrollbar-width: none; }
 .tab { position: relative; display: block; padding: 18px 12px 16px; font: 600 0.95rem/1 var(--font-head); text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); text-decoration: none; border-bottom: 3px solid transparent; white-space: nowrap; }
 .tab:hover { color: var(--text); }
@@ -11,10 +16,34 @@
 .tab__bar { position: absolute; left: 8px; right: 8px; bottom: -1px; height: 3px; background: var(--accent); border-radius: 2px; }
 main:focus { outline: none; }
 .site-footer { border-top: 1px solid var(--line); padding: 24px 0 40px; font-size: 0.85rem; color: var(--muted); }
+.site-footer__inner { display: flex; gap: 12px; align-items: flex-start; }
+.site-footer__inner p { margin: 0; }
+.site-footer__mark { padding-top: 1px; }
+
+/* Hamburger: hidden on wide screens. Three bars that fold into an X when open. */
+.menu-toggle { display: none; }
 @media (max-width: 720px) {
-  .site-header__inner { gap: 0; }
-  .site-header__inner { padding-bottom: 6px; }
-  .tabs { width: 100%; flex-wrap: wrap; overflow: visible; }
-  .tab { display: flex; align-items: center; padding: 10px 8px; font-size: 0.85rem; min-height: 44px; }
-  .site-header { position: static; }
+  .site-header__inner { min-height: 60px; padding-top: 4px; padding-bottom: 4px; justify-content: space-between; flex-wrap: nowrap; }
+  .menu-toggle {
+    display: grid; place-content: center; gap: 5px; width: 44px; height: 44px; margin-right: -6px;
+    background: none; border: 1px solid transparent; border-radius: var(--radius); cursor: pointer;
+  }
+  .menu-toggle span { display: block; width: 22px; height: 2px; background: var(--text); border-radius: 1px; transition: transform 0.2s, opacity 0.2s; }
+  .menu-toggle:hover { border-color: var(--line); }
+  .is-open .menu-toggle span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .is-open .menu-toggle span:nth-child(2) { opacity: 0; }
+  .is-open .menu-toggle span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+  /* The dropdown hangs under the header and covers the page rather than pushing it down. */
+  .site-nav {
+    display: none; position: absolute; left: 0; right: 0; top: 100%;
+    background: var(--surface); border-bottom: 1px solid var(--line); box-shadow: 0 16px 32px rgba(0, 0, 0, 0.5);
+  }
+  .is-open .site-nav { display: block; animation: menu-drop 0.18s ease-out; }
+  .tabs { flex-direction: column; gap: 0; padding: 6px 16px 12px; overflow: visible; }
+  .tab { display: flex; align-items: center; min-height: 48px; padding: 0 4px 0 14px; font-size: 1.05rem; border-bottom: 0; border-left: 3px solid transparent; }
+  .tabs li + li .tab { border-top: 1px solid var(--line); }
+  .tab--active { border-left-color: var(--accent); }
+  .tab__bar { display: none; }
+  .logo-word { font-size: 1.5rem; }
 }
+@keyframes menu-drop { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }

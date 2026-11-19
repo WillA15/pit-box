@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { mainNav } from './nav.js';
 
 // Block the live API so tests run on the bundled snapshot: fast and deterministic.
 test.beforeEach(async ({ page }) => {
@@ -14,7 +15,6 @@ test('landing page loads season data from the snapshot fallback', async ({ page 
 
 test('every main tab is reachable from the nav', async ({ page }) => {
   await page.goto('/');
-  const nav = page.getByRole('navigation', { name: 'Main' });
   for (const [label, heading] of [
     ['Standings', 'Standings'],
     ['Schedule', 'Schedule'],
@@ -22,7 +22,7 @@ test('every main tab is reachable from the nav', async ({ page }) => {
     ['Driver Spotlight', 'Driver Spotlight'],
     ['My Pit Wall', 'My Pit Wall'],
   ]) {
-    await nav.getByRole('link', { name: label }).click();
+    await (await mainNav(page)).getByRole('link', { name: label }).click();
     await expect(page.getByRole('heading', { level: 1 }).first()).toHaveText(heading);
   }
 });

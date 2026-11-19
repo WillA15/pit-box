@@ -1,9 +1,10 @@
 import { NavLink, Outlet, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { useEffect, useLayoutEffect, useRef } from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useSeason } from '../lib/useSeason.js';
 import { pageTitle } from '../lib/pageTitle.js';
 import BackButton from './BackButton.jsx';
+import Logo, { LogoMark } from './Logo.jsx';
 import './Layout.css';
 
 const TABS = [
@@ -19,6 +20,21 @@ export default function Layout() {
   const { data: season } = useSeason();
   const mainRef = useRef(null);
   const firstLoad = useRef(true);
+  const headerRef = useRef(null);
+  // Phone menu. It remembers the page it was opened on, so navigating closes it by itself.
+  const [menuFor, setMenuFor] = useState(null);
+  const menuOpen = menuFor === pathname;
+  const setMenuOpen = (open) => setMenuFor(open ? pathname : null);
+
+  // Also close it on Escape and on a tap outside the header.
+  useEffect(() => {
+    if (!menuOpen) return undefined;
+    const onKey = (e) => { if (e.key === 'Escape') setMenuFor(null); };
+    const onDown = (e) => { if (!headerRef.current?.contains(e.target)) setMenuFor(null); };
+    document.addEventListener('keydown', onKey);
+    document.addEventListener('pointerdown', onDown);
+    return () => { document.removeEventListener('keydown', onKey); document.removeEventListener('pointerdown', onDown); };
+  }, [menuOpen]);
   // Start every page at the top, before it paints (so there's no flash of the old position).
   // Braces matter: newer browsers return a Promise from scrollTo, which React would treat as a cleanup.
   useLayoutEffect(() => {
@@ -39,12 +55,22 @@ export default function Layout() {
   return (
     <>
       <a className="skip-link" href="#main">Skip to content</a>
-      <header className="site-header">
+      <header className={`site-header${menuOpen ? ' is-open' : ''}`} ref={headerRef}>
         <div className="wrap site-header__inner">
           <NavLink to="/" className="logo" aria-label="Pit Box home">
-            PIT<span>BOX</span>
+            <Logo />
           </NavLink>
-          <nav aria-label="Main">
+          <button
+            type="button"
+            className="menu-toggle"
+            aria-expanded={menuOpen}
+            aria-controls="main-nav"
+            aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
+            <span aria-hidden="true" /><span aria-hidden="true" /><span aria-hidden="true" />
+          </button>
+          <nav aria-label="Main" id="main-nav" className="site-nav">
             <ul className="tabs">
               {TABS.map((t) => (
                 <li key={t.to}>
@@ -71,7 +97,8 @@ export default function Layout() {
         </motion.div>
       </main>
       <footer className="site-footer">
-        <div className="wrap">
+        <div className="wrap site-footer__inner">
+          <span className="site-footer__mark"><LogoMark size={22} /></span>
           <p>
             Pit Box is an unofficial fan site and is not associated with Formula 1 companies or the FIA.
             Data from <a href="https://github.com/jolpica/jolpica-f1">Jolpica</a> and{' '}

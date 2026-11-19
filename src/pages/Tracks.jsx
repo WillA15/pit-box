@@ -8,6 +8,7 @@ import { getNow } from '../lib/now.js';
 import { useBookmarks } from '../lib/useBookmarks.js';
 import { Loading, LoadError, SourceNote } from '../components/Status.jsx';
 import TrackMap from '../components/TrackMap.jsx';
+import Trophy from '../components/Trophy.jsx';
 import './Tracks.css';
 
 export default function Tracks() {
@@ -52,8 +53,8 @@ export default function Tracks() {
                       {race.sprint && <span className="tag tag--sprint">Sprint</span>}
                       {race.round === next?.round && <span className="tag tag--next">Next up</span>}
                       {winner ? (
-                        <span className={`track-card__winner${followLevel(winner.driverId, winner.constructorId) ? ' is-followed' : ''}`} style={{ '--team': teamColor(winner.constructorId) }}>
-                          🏆 {season.drivers[winner.driverId]?.familyName}
+                        <span className={`track-card__winner${followLevel(winner.driverId, winner.constructorId) === 'driver' ? ' is-followed' : ''}`} style={{ '--team': teamColor(winner.constructorId) }}>
+                          <Trophy size={14} title="Winner" /> {season.drivers[winner.driverId]?.familyName}
                         </span>
                       ) : (
                         <span className="muted">{weekendRange(race)}</span>

@@ -10,6 +10,7 @@ import { useCareers, useNews } from '../lib/useSeason.js';
 import { getNow } from '../lib/now.js';
 import { SourceNote } from '../components/Status.jsx';
 import FollowChip from '../components/FollowChip.jsx';
+import Icon from '../components/Icon.jsx';
 import Trophy from '../components/Trophy.jsx';
 import ResultsSparkline from '../components/ResultsSparkline.jsx';
 import './Drivers.css';
@@ -202,7 +203,7 @@ function News({ driver, teamName }) {
             <article className="news-card" data-testid="news-card">
               <p className="news-card__meta">
                 <b>{s.lead.source}</b> · <time dateTime={s.lead.date}>{ago(s.lead.date, now)}</time>
-                {s.outlets > 1 && <span className="news-card__trend" title="Covered by several outlets">🔥 {s.outlets} outlets</span>}
+                {s.outlets > 1 && <span className="news-card__trend" title="Covered by several outlets"><Icon name="flame" size={14} /> {s.outlets} outlets</span>}
               </p>
               <h3>
                 <a href={s.lead.link} target="_blank" rel="noopener noreferrer">

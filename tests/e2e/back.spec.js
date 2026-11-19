@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { mainNav } from './nav.js';
 import { latest } from './season-data.js';
 
 test.beforeEach(async ({ page }) => {
@@ -46,9 +47,9 @@ test('switching the Sprint tab does not count as a new page', async ({ page }) =
 
 test('the browser back button and ours stay in step', async ({ page }) => {
   await page.goto('/');
-  await page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'Standings' }).click();
+  await (await mainNav(page)).getByRole('link', { name: 'Standings' }).click();
   await expect(back(page)).toHaveText('← Back to Home');
-  await page.getByRole('navigation', { name: 'Main' }).getByRole('link', { name: 'Tracks' }).click();
+  await (await mainNav(page)).getByRole('link', { name: 'Tracks' }).click();
   await expect(back(page)).toHaveText('← Back to Standings');
   await page.goBack();
   await expect(page).toHaveURL(/\/standings$/);

@@ -10,6 +10,7 @@ import { getNow } from '../lib/now.js';
 import { useBookmarks } from '../lib/useBookmarks.js';
 import { Loading, LoadError, SourceNote } from '../components/Status.jsx';
 import Segmented from '../components/Segmented.jsx';
+import Icon from '../components/Icon.jsx';
 import Countdown from '../components/Countdown.jsx';
 import './Schedule.css';
 
@@ -57,7 +58,7 @@ function ScheduleBody({ season }) {
           className="btn"
           onClick={() => downloadICS('f1-2026-pit-box.ics', buildICS(season.races.filter((r) => r.status !== 'completed')))}
         >
-          📅 Add remaining races to calendar
+          <Icon name="calendar" size={16} /> Add remaining races to calendar
         </button>
       </div>
       <p className="muted schedule__tz">Times shown in your time zone ({tz}).</p>
@@ -120,7 +121,7 @@ function NextUp({ race, now }) {
         <div className="next-up__actions">
           <Link className="btn btn--primary" to={`/tracks/${race.round}`}>Track guide</Link>
           <button type="button" className="btn" onClick={() => downloadICS(`f1-2026-round-${race.round}.ics`, buildICS([race], { sessions: 'all' }))}>
-            📅 Add weekend
+            <Icon name="calendar" size={16} /> Add weekend
           </button>
         </div>
       </div>

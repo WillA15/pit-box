@@ -104,7 +104,7 @@ export default function RaceTable({ season, results, detail, variant = 'race', c
                 <td className="rt-driver">
                   <span className="rt-driver__name">
                     <Link to={`/drivers/${r.driverId}`}>{name}</Link>
-                    {/* Trophy first, so a winner who also set the fastest lap shows 🏆 then ⏱. */}
+                    {/* Trophy first, so a winner who also set the fastest lap shows the trophy then the stopwatch. */}
                     {r.isWinner && <Trophy title={`${session} winner`} size={16} />}
                     {r.isFastest && <FastestLapIcon title={`Fastest lap of the ${session.toLowerCase()}`} size={16} />}
                     {level && (

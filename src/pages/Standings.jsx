@@ -10,6 +10,7 @@ import { Loading, LoadError, SourceNote } from '../components/Status.jsx';
 import Segmented from '../components/Segmented.jsx';
 import FollowStar from '../components/FollowStar.jsx';
 import RoundTrack from '../components/RoundTrack.jsx';
+import Icon from '../components/Icon.jsx';
 import Trophy from '../components/Trophy.jsx';
 import './Standings.css';
 
@@ -206,7 +207,7 @@ function StandingsBody({ season }) {
           <div className="round-slider__controls">
             <Segmented label="Replay speed" options={SPEEDS} value={speed} onChange={setSpeed} />
             <button type="button" className="btn btn--primary" onClick={playing ? pause : play}>
-              {playing ? '❚❚ Pause' : '▶ Replay season'}
+              {playing ? <><Icon name="pause" size={14} /> Pause</> : <><Icon name="play" size={14} /> Replay season</>}
             </button>
           </div>
         </div>

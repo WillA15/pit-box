@@ -111,7 +111,7 @@ test('the race name links to its track page, rising and turning red on hover', a
   await expect(link).toHaveText(latest.name);
   if (!isMobile) {
     await link.hover();
-    await expect.poll(() => link.evaluate((el) => getComputedStyle(el).color)).toBe('rgb(225, 6, 0)');
+    await expect.poll(() => link.evaluate((el) => getComputedStyle(el).color)).toBe('rgb(255, 77, 69)');
     await expect.poll(() => link.evaluate((el) => getComputedStyle(el).transform)).not.toBe('none');
   }
   // Picking another round changes where it goes.
