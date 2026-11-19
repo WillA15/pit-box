@@ -4,7 +4,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { useSeason } from '../lib/useSeason.js';
 import { pageTitle } from '../lib/pageTitle.js';
 import BackButton from './BackButton.jsx';
-import Logo, { LogoMark } from './Logo.jsx';
+import Logo from './Logo.jsx';
 import './Layout.css';
 
 const TABS = [
@@ -97,8 +97,7 @@ export default function Layout() {
         </motion.div>
       </main>
       <footer className="site-footer">
-        <div className="wrap site-footer__inner">
-          <span className="site-footer__mark"><LogoMark size={22} /></span>
+        <div className="wrap">
           <p>
             Pit Box is an unofficial fan site and is not associated with Formula 1 companies or the FIA.
             Data from <a href="https://github.com/jolpica/jolpica-f1">Jolpica</a> and{' '}
