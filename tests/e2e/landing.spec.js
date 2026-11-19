@@ -6,27 +6,11 @@ test.beforeEach(async ({ page }) => {
   await page.route('**/api/**', (route) => route.abort());
 });
 
-test('the start lights fill towards race day, once per visit', async ({ page }) => {
+test('the hero shows the Pit Box title and tagline, with no start lights', async ({ page }) => {
   await page.goto(`/?now=${NOW}`);
-  await expect(page.locator('.hero__pod i.on').first()).toBeVisible({ timeout: 2000 });
-  await expect(page.getByText(/\d \/ 5 · Lights fill|Race day · all lights on/)).toBeVisible({ timeout: 4000 });
-  await expect(page.getByRole('heading', { level: 1 })).toContainText('Pit Box');
-  await page.waitForTimeout(2300); // let the step-up sequence finish
-  const lit = await page.locator('.hero__pod i.on').count();
-  expect(lit).toBeGreaterThan(0);
-  // Second visit in the same session shows the same count at once, with no step-up.
-  await page.reload();
-  await expect(page.locator('.hero__pod i.on')).toHaveCount(lit, { timeout: 500 });
-});
-
-test('reduced motion shows the lights without the sequence', async ({ browser }) => {
-  const ctx = await browser.newContext({ reducedMotion: 'reduce' });
-  const page = await ctx.newPage();
-  await page.route('**/api/**', (route) => route.abort());
-  await page.goto(`/?now=${NOW}`);
-  await expect(page.getByRole('heading', { level: 1 })).toContainText('Pit Box', { timeout: 500 });
-  await expect(page.locator('.hero__pod i.on').first()).toBeVisible({ timeout: 500 });
-  await ctx.close();
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Pit Box');
+  await expect(page.getByText('The one-stop strategy for all things F1')).toBeVisible();
+  await expect(page.locator('.hero__pod')).toHaveCount(0);
 });
 
 test('gap meters show the decided drivers and constructors titles', async ({ page }) => {

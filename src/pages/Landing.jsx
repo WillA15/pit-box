@@ -26,7 +26,6 @@ export default function Landing() {
   const { data: season, error, loading } = useSeason();
   return (
     <section className="page landing">
-      <h1 className="sr-only">Pit Box</h1>
       {loading && <Loading />}
       {error && <LoadError error={error} />}
       {season && <LandingBody season={season} />}
