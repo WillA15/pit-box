@@ -6,6 +6,12 @@ const MIN_GAP_MS = { 'api.jolpi.ca': 300, 'api.openf1.org': 400 };
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
+// Jolpica rejects (HTTP 403) requests carrying Node's default user agent, so server-side calls
+// (Vercel functions, the snapshot script) name themselves. Browsers send their own and can't override it.
+const HEADERS = typeof window === 'undefined'
+  ? { accept: 'application/json', 'user-agent': 'pit-box/1.0 (unofficial F1 fan site)' }
+  : { accept: 'application/json' };
+
 export async function getJSON(url, { retries = 4, fetchImpl = fetch } = {}) {
   const host = new URL(url).host;
   for (let attempt = 0; ; attempt++) {
@@ -16,7 +22,7 @@ export async function getJSON(url, { retries = 4, fetchImpl = fetch } = {}) {
 
     let res;
     try {
-      res = await fetchImpl(url, { headers: { accept: 'application/json' } });
+      res = await fetchImpl(url, { headers: HEADERS });
     } catch (err) {
       if (attempt >= retries) throw err;
       await sleep(1000 * 2 ** attempt);
