@@ -4,6 +4,8 @@
 //   npm run snapshot -- circuits     -> season + circuits only
 //   npm run snapshot -- careers      -> season + career totals only
 //   npm run snapshot -- news         -> news archive only (fast; run often)
+//   npm run snapshot -- if-new       -> full snapshot, but only if Jolpica has results the saved
+//                                       season.json doesn't (used by the scheduled GitHub Action)
 import { mkdir, writeFile, readFile } from 'node:fs/promises';
 import { buildSeason } from '../src/lib/f1/buildSeason.js';
 import { buildRace } from '../src/lib/f1/buildRace.js';
@@ -25,6 +27,20 @@ const doNews = everything || modes.includes('news');
 
 await mkdir(new URL('races/', OUT), { recursive: true });
 
+// Which sessions have results: changes only when a race or sprint result is published.
+const resultsKey = (s) => s.races.map((r) => `${r.round}:${r.results.length}:${r.sprintResults.length}`).join(',');
+let season = null;
+if (args.includes('if-new')) {
+  season = await buildSeason(2026);
+  let saved = null;
+  try { saved = JSON.parse(await readFile(new URL('season.json', OUT), 'utf8')); } catch { /* first run */ }
+  if (saved && resultsKey(saved) === resultsKey(season)) {
+    console.log(`No new results since the saved snapshot (round ${saved.standingsRound}); nothing to update.`);
+    process.exit(0);
+  }
+  console.log(`New results found (saved round ${saved?.standingsRound ?? 'none'} -> ${season.standingsRound}); refreshing everything.`);
+}
+
 if (doNews) {
   console.log('Fetching news feeds…');
   const fresh = await fetchAllNews();
@@ -37,7 +53,7 @@ if (doNews) {
 }
 
 console.log('Fetching season from Jolpica…');
-const season = await buildSeason(2026);
+season ??= await buildSeason(2026);
 await writeFile(new URL('season.json', OUT), JSON.stringify(season));
 const done = season.races.filter((r) => r.status === 'completed' || r.sprintResults.length);
 console.log(`season.json: ${season.races.length} rounds, ${done.length} with results`);
