@@ -40,6 +40,7 @@ function LandingBody({ season }) {
   const next = nextRace(season.races, getNow());
   const latest = [...season.races].reverse().find((r) => r.results.length);
   const raceName = (round) => season.races.find((r) => r.round === round)?.name ?? `round ${round}`;
+  const champions = { drivers: drivers?.championId ?? null, constructors: teams?.championId ?? null };
   const done = season.races.filter((r) => r.results.length).length;
 
   return (
@@ -49,10 +50,10 @@ function LandingBody({ season }) {
       <div className="landing__fights">
         <GapMeter fight={drivers} title="Drivers' title" nameOf={driverName(season)} colorOf={driverColor(season)} raceName={raceName} />
         <GapMeter fight={teams} title="Constructors' title" nameOf={(id) => teamShortName(id, season.constructors[id]?.name)} colorOf={teamColor} raceName={raceName} />
-        {latest && <Podium season={season} race={latest} />}
+        {latest && <Podium season={season} race={latest} championId={champions.drivers} />}
       </div>
 
-      <PitWallPreview season={season} />
+      <PitWallPreview season={season} champions={champions} />
 
       <nav className="landing__links" aria-label="Explore Pit Box">
         {LINKS.map((l, i) => (

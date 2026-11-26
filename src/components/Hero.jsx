@@ -22,7 +22,7 @@ export default function Hero({ season, race }) {
               <Countdown to={race.start} label="Lights out in" />
               <div className="hero__actions">
                 <Link className="btn btn--primary" to={`/tracks/${race.round}`}>Track guide</Link>
-                <Link className="btn" to="/schedule">Full schedule</Link>
+                <Link className="btn btn--primary" to="/schedule">Full schedule</Link>
               </div>
             </>
           ) : (

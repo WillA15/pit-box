@@ -5,6 +5,7 @@ import { useSeason } from '../lib/useSeason.js';
 import { pageTitle } from '../lib/pageTitle.js';
 import BackButton from './BackButton.jsx';
 import Logo from './Logo.jsx';
+import BackToTop from './BackToTop.jsx';
 import './Layout.css';
 
 const TABS = [
@@ -95,6 +96,7 @@ export default function Layout() {
         <motion.div key={pathname.split('/')[1] || 'home'} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, ease: 'easeOut' }}>
           <Outlet />
         </motion.div>
+        <BackToTop />
       </main>
       <footer className="site-footer">
         <div className="wrap">

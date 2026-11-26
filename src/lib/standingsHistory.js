@@ -150,6 +150,7 @@ export function titleFight(history, races, kind, { rivals = 3 } = {}) {
     racesLeft,
     decided: Boolean(clinch),
     clinchRound: clinch?.round ?? null,
+    championId: clinch?.id ?? null,
     leader: { id: leader.id, points: leader.points },
     rivals: rest.slice(0, rivals).map((r) => ({
       id: r.id,

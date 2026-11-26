@@ -40,7 +40,7 @@ export default function DriverProfile({ season, driverId }) {
   return (
     <section className="page driver" style={{ '--team': color }}>
       <nav className="driver__nav" aria-label="Drivers">
-        <Link to="/drivers">← All drivers</Link>
+        <Link className="btn btn--primary btn--sm" to="/drivers">All drivers</Link>
         <label>
           <span className="sr-only">Switch driver</span>
           <select value={driverId} onChange={(e) => navigate(`/drivers/${e.target.value}`)} aria-label="Switch driver">

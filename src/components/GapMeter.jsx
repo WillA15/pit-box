@@ -33,7 +33,10 @@ export default function GapMeter({ fight, nameOf, colorOf, title, raceName }) {
       <ol className="gap-meter__rows">
         {rows.map((r, i) => (
           <li key={r.id} className={`gap-meter__row${r.alive ? '' : ' is-out'}`} style={{ '--team': colorOf(r.id) }} data-testid="gap-row">
-            <span className="gap-meter__name">{nameOf(r.id)}</span>
+            <span className="gap-meter__name">
+              <span className="gap-meter__name-text">{nameOf(r.id)}</span>
+              {fight.championId === r.id && <Trophy title={`2026 ${title.replace(/ title$/, '')} World Champion`} size={16} />}
+            </span>
             <div className="gap-meter__track" role="img" aria-label={r.isLeader ? `${nameOf(r.id)} leads on ${r.points} points` : `${nameOf(r.id)}: ${r.points} points, ${r.gap} behind; can reach ${r.maxPossible}${r.alive ? '' : ', out of contention'}`}>
               {!fight.decided && (
                 <motion.span

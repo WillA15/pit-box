@@ -49,7 +49,9 @@ h3 { font-size: 1.15rem; font-weight: 600; }
   font: 600 0.9rem/1 var(--font-head); text-transform: uppercase; letter-spacing: 0.06em;
 }
 .btn:hover { border-color: var(--accent); }
-.btn--primary { background: var(--accent); border-color: var(--accent); }
+.btn--primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); transition: filter 0.18s, transform 0.18s; }
+.btn--primary:hover { border-color: var(--accent); filter: brightness(1.12); }
+.btn--sm { min-height: 36px; padding: 6px 12px; font-size: 0.82rem; }
 .team-bar { display: inline-block; width: 4px; height: 1.2em; vertical-align: middle; border-radius: 1px; }
 .page-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 12px; }
 .page-head h1 { margin: 0; }

@@ -18,7 +18,6 @@
 .driver-grid--small .driver-card { min-height: 100px; }
 
 .driver__nav { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; font-size: 0.9rem; }
-.driver__nav a { color: var(--muted); }
 .driver__nav select { background: var(--surface-raised); color: var(--text); border: 1px solid var(--line); padding: 7px 10px; font: inherit; }
 .driver__hero {
   position: relative; display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: end; overflow: hidden;

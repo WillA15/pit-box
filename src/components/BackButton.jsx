@@ -15,7 +15,7 @@ const save = (s) => {
 let memory = load();
 
 /**
- * "← Back to Standings": returns to the previous Pit Box page (same as the browser's back button,
+ * "Back to Standings": returns to the previous Pit Box page (same as the browser's back button,
  * so scroll position and history stay consistent). Hidden when there's no earlier page on the site.
  */
 export default function BackButton() {
@@ -33,7 +33,8 @@ export default function BackButton() {
 
   const prev = previousEntry(state);
   const current = state?.entries?.[state.index];
-  const visible = prev && current?.key === location.key;
+  // The home page is the top of the site, so it never shows a back button.
+  const visible = prev && current?.key === location.key && location.pathname !== '/';
   return (
     <AnimatePresence initial={false}>
       {visible && (
@@ -47,7 +48,7 @@ export default function BackButton() {
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
         >
-          <span aria-hidden="true">←</span> Back to {labelForPath(prev.path, season)}
+          Back to {labelForPath(prev.path, season)}
         </motion.button>
       )}
     </AnimatePresence>

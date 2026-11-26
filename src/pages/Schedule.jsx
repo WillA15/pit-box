@@ -55,7 +55,7 @@ function ScheduleBody({ season }) {
         <Segmented label="Filter races" options={FILTER_OPTIONS} value={filter} onChange={setFilter} />
         <button
           type="button"
-          className="btn"
+          className="btn btn--primary"
           onClick={() => downloadICS('f1-2026-pit-box.ics', buildICS(season.races.filter((r) => r.status !== 'completed')))}
         >
           <Icon name="calendar" size={16} /> Add remaining races to calendar
@@ -120,7 +120,7 @@ function NextUp({ race, now }) {
         <Countdown to={nextSession.start} label={`${nextSession.name} in`} />
         <div className="next-up__actions">
           <Link className="btn btn--primary" to={`/tracks/${race.round}`}>Track guide</Link>
-          <button type="button" className="btn" onClick={() => downloadICS(`f1-2026-round-${race.round}.ics`, buildICS([race], { sessions: 'all' }))}>
+          <button type="button" className="btn btn--primary" onClick={() => downloadICS(`f1-2026-round-${race.round}.ics`, buildICS([race], { sessions: 'all' }))}>
             <Icon name="calendar" size={16} /> Add weekend
           </button>
         </div>

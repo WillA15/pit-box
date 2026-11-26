@@ -6,10 +6,11 @@ import { computeStandingsHistory } from '../lib/standingsHistory.js';
 import { driverSummary, teamSummary } from '../lib/pitWall.js';
 import { teamColor, teamShortName } from '../lib/teams.js';
 import { pts } from '../lib/format.js';
+import Trophy from './Trophy.jsx';
 import './PitWallPreview.css';
 
 /** Compact strip of what the visitor follows, for the landing page. */
-export default function PitWallPreview({ season }) {
+export default function PitWallPreview({ season, champions = {} }) {
   const bm = useBookmarks();
   const history = useMemo(() => computeStandingsHistory(season.races), [season]);
   if (!bm.count) {
@@ -27,24 +28,24 @@ export default function PitWallPreview({ season }) {
     ...bm.drivers.filter((id) => season.drivers[id]).map((id) => {
       const s = driverSummary(season, history, id);
       const d = season.drivers[id];
-      return { key: `d-${id}`, to: `/drivers/${id}`, name: d.familyName, color: teamColor(d.constructorId), pos: s.standing?.pos, pts: s.standing?.points ?? 0, last: s.latest?.label };
+      return { key: `d-${id}`, to: `/drivers/${id}`, name: d.familyName, color: teamColor(d.constructorId), pos: s.standing?.pos, pts: s.standing?.points ?? 0, last: s.latest?.label, champ: champions.drivers === id ? "2026 Drivers' World Champion" : null };
     }),
     ...bm.teams.filter((id) => season.constructors[id]).map((id) => {
       const s = teamSummary(season, history, id);
-      return { key: `t-${id}`, to: '/pit-wall', name: teamShortName(id, season.constructors[id].name), color: teamColor(id), pos: s.standing?.pos, pts: s.standing?.points ?? 0, last: s.latest ? pts(s.latest.points) : null };
+      return { key: `t-${id}`, to: '/pit-wall', name: teamShortName(id, season.constructors[id].name), color: teamColor(id), pos: s.standing?.pos, pts: s.standing?.points ?? 0, last: s.latest ? pts(s.latest.points) : null, champ: champions.constructors === id ? "2026 Constructors' World Champion" : null };
     }),
   ].slice(0, 6);
   return (
     <div className="panel pwp" data-testid="pit-wall-preview">
       <div className="pwp__head">
         <h2>Your pit wall</h2>
-        <Link to="/pit-wall">Open my pit wall →</Link>
+        <Link className="btn btn--primary btn--sm" to="/pit-wall">Open my pit wall</Link>
       </div>
       <ol className="pwp__list">
         {items.map((it, i) => (
           <motion.li key={it.key} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.06 }}>
             <Link to={it.to} className="pwp__item" style={{ '--team': it.color }}>
-              <b>{it.name}</b>
+              <b>{it.name}{it.champ && <Trophy title={it.champ} size={15} />}</b>
               <span>{it.pos ? `P${it.pos}` : '–'} · {pts(it.pts)}</span>
               {it.last && <small className="muted">Last race: {it.last}</small>}
             </Link>

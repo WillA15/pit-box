@@ -99,8 +99,8 @@ function TrackBody({ season, race }) {
       {hasResults && <Results season={season} race={race} />}
 
       <nav className="track__pager" aria-label="Other rounds">
-        {prev ? <Link className="btn" to={`/tracks/${prev.round}`}>← R{prev.round} {prev.name}</Link> : <span />}
-        {next && <Link className="btn" to={`/tracks/${next.round}`}>R{next.round} {next.name} →</Link>}
+        {prev ? <Link className="btn btn--primary" to={`/tracks/${prev.round}`}>R{prev.round} {prev.name}</Link> : <span />}
+        {next && <Link className="btn btn--primary" to={`/tracks/${next.round}`}>R{next.round} {next.name}</Link>}
       </nav>
     </section>
   );

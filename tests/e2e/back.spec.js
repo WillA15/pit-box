@@ -6,7 +6,7 @@ test.beforeEach(async ({ page }) => {
   await page.route('**/api/**', (route) => route.abort());
 });
 
-const back = (page) => page.getByRole('button', { name: /^Back to / });
+const back = (page) => page.getByRole('button', { name: /^Back to (?!top$)/ });
 
 test('no back button on the first page you open', async ({ page }) => {
   await page.goto('/standings');
@@ -18,7 +18,7 @@ test('standings → track page → back to standings', async ({ page }) => {
   await page.goto('/standings');
   await page.locator('.round-slider__race-link').click();
   await expect(page).toHaveURL(new RegExp(`/tracks/${latest.round}$`));
-  await expect(back(page)).toHaveText('← Back to Standings');
+  await expect(back(page)).toHaveText('Back to Standings');
   await back(page).click();
   await expect(page).toHaveURL(/\/standings$/);
   await expect(back(page)).toHaveCount(0);
@@ -27,13 +27,13 @@ test('standings → track page → back to standings', async ({ page }) => {
 test('names the previous race or driver, and walks back through several pages', async ({ page }) => {
   await page.goto('/schedule');
   await page.getByTestId('schedule-row').filter({ hasText: latest.name }).getByRole('link').click();
-  await expect(back(page)).toHaveText('← Back to Schedule');
+  await expect(back(page)).toHaveText('Back to Schedule');
   await page.getByTestId('race-row').first().locator('.rt-strategy').click();
   await expect(page).toHaveURL(new RegExp(`/drivers/${latest.results[0].driverId}$`));
-  await expect(back(page)).toHaveText(`← Back to ${latest.name}`);
+  await expect(back(page)).toHaveText(`Back to ${latest.name}`);
   await back(page).click();
   await expect(page).toHaveURL(new RegExp(`/tracks/${latest.round}$`));
-  await expect(back(page)).toHaveText('← Back to Schedule');
+  await expect(back(page)).toHaveText('Back to Schedule');
 });
 
 test('switching the Sprint tab does not count as a new page', async ({ page }) => {
@@ -48,12 +48,12 @@ test('switching the Sprint tab does not count as a new page', async ({ page }) =
 test('the browser back button and ours stay in step', async ({ page }) => {
   await page.goto('/');
   await (await mainNav(page)).getByRole('link', { name: 'Standings' }).click();
-  await expect(back(page)).toHaveText('← Back to Home');
+  await expect(back(page)).toHaveText('Back to Home');
   await (await mainNav(page)).getByRole('link', { name: 'Tracks' }).click();
-  await expect(back(page)).toHaveText('← Back to Standings');
+  await expect(back(page)).toHaveText('Back to Standings');
   await page.goBack();
   await expect(page).toHaveURL(/\/standings$/);
-  await expect(back(page)).toHaveText('← Back to Home');
+  await expect(back(page)).toHaveText('Back to Home');
 });
 
 // Wait for the new page to draw and reach the top, then keep checking for a while,
@@ -109,4 +109,20 @@ test('going back always lands at the top of the previous page', async ({ page })
   await page.goBack();
   await expect(page).toHaveURL(new RegExp(`/tracks/${latest.round}$`));
   expect(await settledScroll(page)).toBe(0);
+});
+
+test('the home page never shows a back button', async ({ page }) => {
+  await page.goto('/standings');
+  await page.getByRole('link', { name: 'Pit Box home' }).click();
+  await expect(page).toHaveURL(/\/$/);
+  await expect(back(page)).toHaveCount(0);
+});
+
+test('back to top returns to the top of the page', async ({ page }) => {
+  await page.goto('/schedule');
+  const btn = page.getByRole('button', { name: 'Back to top' });
+  await btn.scrollIntoViewIfNeeded();
+  await expect.poll(() => page.evaluate(() => window.scrollY)).toBeGreaterThan(300);
+  await btn.click();
+  await expect.poll(() => page.evaluate(() => Math.round(window.scrollY))).toBe(0);
 });

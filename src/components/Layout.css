@@ -41,3 +41,4 @@ main:focus { outline: none; }
   .logo-word { font-size: 1.5rem; }
 }
 @keyframes menu-drop { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+.back-to-top { display: flex; justify-content: center; margin: 32px 0 8px; }

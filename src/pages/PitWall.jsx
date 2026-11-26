@@ -71,7 +71,7 @@ function PitWallBody({ season }) {
             <span className="tag">Next up · Round {next.round}</span>
             <h2><span aria-hidden="true">{flag(next.country)} </span>{next.name}</h2>
             <p className="muted">{next.circuitName}</p>
-            <Link className="btn" to={`/tracks/${next.round}`}>Track guide</Link>
+            <Link className="btn btn--primary" to={`/tracks/${next.round}`}>Track guide</Link>
           </div>
           <Countdown to={next.start} label="Lights out in" />
         </motion.div>
