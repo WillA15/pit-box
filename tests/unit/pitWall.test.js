@@ -29,6 +29,7 @@ describe('teamSummary (real data)', () => {
   it('shows both cars from the latest race and the standings total', () => {
     const t = teamSummary(season, history, 'mercedes');
     expect(t.latest.cars).toHaveLength(2);
+    for (const c of t.latest.cars) expect(Number.isInteger(c.pos)).toBe(true);
     expect(t.trend.at(-1).points).toBe(t.standing.points);
   });
 });

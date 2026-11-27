@@ -15,8 +15,7 @@ import { Loading, LoadError, SourceNote } from '../components/Status.jsx';
 import Countdown from '../components/Countdown.jsx';
 import FollowChip from '../components/FollowChip.jsx';
 import FollowStar from '../components/FollowStar.jsx';
-import MiniTrend from '../components/MiniTrend.jsx';
-import { pts } from '../lib/format.js';
+import { ordinal } from '../lib/format.js';
 import './PitWall.css';
 
 // The chart library is big, so it loads only when this page needs it.
@@ -56,8 +55,6 @@ function PitWallBody({ season }) {
 
   const drivers = bm.drivers.filter((id) => season.drivers[id]).map((id) => driverSummary(season, history, id));
   const teams = bm.teams.filter((id) => season.constructors[id]).map((id) => teamSummary(season, history, id));
-  const maxDriverPts = Math.max(1, ...drivers.map((d) => d.trend.at(-1)?.points ?? 0));
-  const maxTeamPts = Math.max(1, ...teams.map((t) => t.trend.at(-1)?.points ?? 0));
   const lastIdx = history.rounds.length - 1;
   const raceName = (r) => season.races.find((x) => x.round === r)?.name;
 
@@ -82,7 +79,7 @@ function PitWallBody({ season }) {
           <h2 id="pw-drivers">Your drivers</h2>
           <ol className="pw-grid">
             <AnimatePresence>
-              {drivers.map((s, i) => <DriverCard key={s.id} s={s} season={season} i={i} max={maxDriverPts} />)}
+              {drivers.map((s, i) => <DriverCard key={s.id} s={s} season={season} i={i} />)}
             </AnimatePresence>
           </ol>
         </section>
@@ -93,7 +90,7 @@ function PitWallBody({ season }) {
           <h2 id="pw-teams">Your teams</h2>
           <ol className="pw-grid">
             <AnimatePresence>
-              {teams.map((s, i) => <TeamCard key={s.id} s={s} season={season} i={i} max={maxTeamPts} />)}
+              {teams.map((s, i) => <TeamCard key={s.id} s={s} season={season} i={i} />)}
             </AnimatePresence>
           </ol>
         </section>
@@ -197,7 +194,7 @@ function Following({ season }) {
   );
 }
 
-function DriverCard({ s, season, i, max }) {
+function DriverCard({ s, season, i }) {
   const d = season.drivers[s.id];
   const color = teamColor(d.constructorId);
   const name = `${d.givenName} ${d.familyName}`;
@@ -208,7 +205,7 @@ function DriverCard({ s, season, i, max }) {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ delay: i * 0.06 }}
-      className="pw-card"
+      className="pw-card pw-card--roomy"
       style={{ '--team': color }}
       data-testid="pw-driver"
     >
@@ -222,30 +219,26 @@ function DriverCard({ s, season, i, max }) {
       <div className="pw-card__nums">
         <div><b>{s.standing ? `P${s.standing.pos}` : '–'}</b><small>Championship</small></div>
         <div><b>{s.standing?.points ?? 0}</b><small>Points</small></div>
-        <div><b>+{s.lastRoundPoints}</b><small>Last round</small></div>
+        <div>
+          <b>{!s.latest ? '–' : s.latest.label === 'DNF' ? 'DNF' : ordinal(s.latest.pos)}</b>
+          <small>Latest Placement</small>
+        </div>
       </div>
-      <MiniTrend trend={s.trend} color={color} max={max} label={`${d.familyName} points by round`} />
-      {s.latest && (
-        <p className="pw-card__latest">
-          <Link to={`/tracks/${s.latest.round}`}>
-            <span aria-hidden="true">{flag(s.latest.country)} </span>
-            {s.latest.name}
-          </Link>
-          : <b>{s.latest.label}</b>
-          {s.latest.gained ? <span className={s.latest.gained > 0 ? 'up' : 'down'}> {s.latest.gained > 0 ? `▲${s.latest.gained}` : `▼${-s.latest.gained}`} from P{s.latest.grid}</span> : null}
-          {s.latest.label === 'DNF' && <span className="muted"> ({s.latest.status})</span>}
-        </p>
+      {s.recent.length > 0 && (
+        <div className="pw-recent">
+          <h3 className="pw-recent__title">Recent Placements</h3>
+          <ol className="pw-form" aria-label="Last five results">
+            {s.recent.map((r) => (
+              <li key={r.round} className={r.label === 'DNF' ? 'is-dnf' : r.pos <= 3 ? 'is-podium' : ''} title={`R${r.round} ${r.name}`}>{r.label}</li>
+            ))}
+          </ol>
+        </div>
       )}
-      <ol className="pw-form" aria-label="Last five results">
-        {s.recent.map((r) => (
-          <li key={r.round} className={r.label === 'DNF' ? 'is-dnf' : r.pos <= 3 ? 'is-podium' : ''} title={`R${r.round} ${r.name}`}>{r.label}</li>
-        ))}
-      </ol>
     </motion.li>
   );
 }
 
-function TeamCard({ s, season, i, max }) {
+function TeamCard({ s, season, i }) {
   const color = teamColor(s.id);
   const name = teamShortName(s.id, season.constructors[s.id]?.name ?? s.id);
   return (
@@ -255,7 +248,7 @@ function TeamCard({ s, season, i, max }) {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ delay: i * 0.06 }}
-      className="pw-card"
+      className="pw-card pw-card--roomy"
       style={{ '--team': color }}
       data-testid="pw-team"
     >
@@ -271,21 +264,27 @@ function TeamCard({ s, season, i, max }) {
         <div><b>{s.standing?.points ?? 0}</b><small>Points</small></div>
         <div><b>{s.standing?.wins ?? 0}</b><small>Wins</small></div>
       </div>
-      <MiniTrend trend={s.trend} color={color} max={max} label={`${name} points by round`} />
       {s.latest && (
-        <p className="pw-card__latest">
-          <Link to={`/tracks/${s.latest.round}`}>
-            <span aria-hidden="true">{flag(s.latest.country)} </span>
-            {s.latest.name}
-          </Link>
-          : {s.latest.cars.map((c, k) => (
-            <span key={c.driverId}>
-              {k > 0 && ', '}
-              <Link to={`/drivers/${c.driverId}`}>{season.drivers[c.driverId]?.code}</Link> <b>{c.label}</b>
-            </span>
-          ))}
-          <span className="muted"> · {pts(s.latest.points)}</span>
-        </p>
+        <div className="pw-recent">
+          <h3 className="pw-recent__title">Latest Placements</h3>
+          <ul className="pw-cars">
+            {s.latest.cars.map((c) => (
+              <li key={c.driverId} className={c.label === 'DNF' ? 'is-dnf' : c.pos <= 3 ? 'is-podium' : ''}>
+                <span className="pw-cars__text">
+                  <b>{c.label === 'DNF' ? 'DNF' : ordinal(c.pos)}</b>
+                  <small>{season.drivers[c.driverId]?.familyName ?? c.driverId}</small>
+                </span>
+                <Link
+                  className="btn btn--primary btn--sm pw-cars__link"
+                  to={`/drivers/${c.driverId}`}
+                  aria-label={`Profile: ${season.drivers[c.driverId]?.givenName ?? ''} ${season.drivers[c.driverId]?.familyName ?? c.driverId}`.trim()}
+                >
+                  Profile
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
       )}
     </motion.li>
   );

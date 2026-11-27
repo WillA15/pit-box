@@ -22,6 +22,7 @@ export function driverSummary(season, history, driverId) {
       round: last.round,
       name: last.name,
       country: last.country,
+      pos: latest.pos,
       label: CLASSIFIED.test(latest.positionText) ? `P${latest.pos}` : 'DNF',
       status: latest.status,
       grid: latest.grid,
@@ -42,7 +43,7 @@ export function teamSummary(season, history, constructorId) {
   const cars = last
     ? last.results
         .filter((x) => x.constructorId === constructorId)
-        .map((x) => ({ driverId: x.driverId, label: CLASSIFIED.test(x.positionText) ? `P${x.pos}` : 'DNF', points: x.points }))
+        .map((x) => ({ driverId: x.driverId, pos: x.pos, label: CLASSIFIED.test(x.positionText) ? `P${x.pos}` : 'DNF', points: x.points }))
     : [];
   const trend = history.rounds.map((round) => ({ round, points: history.constructors[round].find((x) => x.id === constructorId)?.points ?? 0 }));
   return {
