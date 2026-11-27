@@ -12,7 +12,7 @@ const TABS = [
   { to: '/standings', label: 'Standings' },
   { to: '/schedule', label: 'Schedule' },
   { to: '/tracks', label: 'Tracks' },
-  { to: '/drivers', label: 'Driver Spotlight' },
+  { to: '/drivers', label: 'Drivers' },
   { to: '/pit-wall', label: 'My Pit Wall' },
 ];
 

@@ -7,7 +7,7 @@ import DriverProfile from './DriverProfile.jsx';
 export default function Drivers() {
   const { driverId } = useParams();
   const { data: season, error, loading } = useSeason();
-  if (loading) return <section className="page"><h1>Driver Spotlight</h1><Loading /></section>;
-  if (error) return <section className="page"><h1>Driver Spotlight</h1><LoadError error={error} /></section>;
+  if (loading) return <section className="page"><h1>Drivers</h1><Loading /></section>;
+  if (error) return <section className="page"><h1>Drivers</h1><LoadError error={error} /></section>;
   return driverId ? <DriverProfile season={season} driverId={driverId} /> : <DriverPicker season={season} />;
 }

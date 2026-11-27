@@ -13,7 +13,7 @@ export default function DriverPicker({ season }) {
   return (
     <section className="page">
       <div className="page-head">
-        <h1>Driver Spotlight</h1>
+        <h1>Drivers</h1>
         <SourceNote data={season} />
       </div>
       <p className="muted">Pick a driver for their 2026 season, teammate battle, career numbers and the stories everyone's writing about them.</p>

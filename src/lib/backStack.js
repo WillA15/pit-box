@@ -39,7 +39,7 @@ const SECTIONS = {
   standings: 'Standings',
   schedule: 'Schedule',
   tracks: 'Tracks',
-  drivers: 'Driver Spotlight',
+  drivers: 'Drivers',
   'pit-wall': 'My Pit Wall',
 };
 

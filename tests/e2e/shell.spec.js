@@ -19,7 +19,7 @@ test('every main tab is reachable from the nav', async ({ page }) => {
     ['Standings', 'Standings'],
     ['Schedule', 'Schedule'],
     ['Tracks', 'Tracks'],
-    ['Driver Spotlight', 'Driver Spotlight'],
+    ['Drivers', 'Drivers'],
     ['My Pit Wall', 'My Pit Wall'],
   ]) {
     await (await mainNav(page)).getByRole('link', { name: label }).click();

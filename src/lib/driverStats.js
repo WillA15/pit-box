@@ -1,4 +1,4 @@
-// Season statistics for Driver Spotlight, computed from the season document (pure, testable).
+// Season statistics for Drivers, computed from the season document (pure, testable).
 
 const CLASSIFIED = /^\d+$/;
 const isClassified = (r) => CLASSIFIED.test(r?.positionText ?? '');

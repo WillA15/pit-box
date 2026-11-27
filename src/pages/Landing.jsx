@@ -18,7 +18,7 @@ const LINKS = [
   { to: '/standings', icon: <Icon name="trophy" size={28} />, title: 'Standings', text: 'Replay the championship round by round.' },
   { to: '/schedule', icon: <Icon name="calendar" size={28} />, title: 'Schedule', text: 'Every session in your time zone.' },
   { to: '/tracks', icon: <Icon name="route" size={28} />, title: 'Tracks', text: 'Circuit maps and every pit strategy.' },
-  { to: '/drivers', icon: <Icon name="helmet" size={28} />, title: 'Driver Spotlight', text: 'Stats, teammate battles and news.' },
+  { to: '/drivers', icon: <Icon name="helmet" size={28} />, title: 'Drivers', text: 'Stats, teammate battles and news.' },
   { to: '/pit-wall', icon: <Icon name="star" size={28} />, title: 'My Pit Wall', text: 'Everything you follow, in one place.' },
 ];
 

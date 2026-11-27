@@ -4,7 +4,7 @@ const STATIC = {
   '/standings': 'Standings',
   '/schedule': 'Schedule',
   '/tracks': 'Tracks',
-  '/drivers': 'Driver Spotlight',
+  '/drivers': 'Drivers',
   '/pit-wall': 'My Pit Wall',
 };
 
@@ -23,7 +23,7 @@ export function pageTitle(pathname, season) {
   const driver = path.match(/^\/drivers\/([^/]+)$/);
   if (driver) {
     const d = season?.drivers?.[driver[1]];
-    return d ? `${d.givenName} ${d.familyName} · ${SITE}` : `Driver Spotlight · ${SITE}`;
+    return d ? `${d.givenName} ${d.familyName} · ${SITE}` : `Drivers · ${SITE}`;
   }
 
   return `Page not found · ${SITE}`;
