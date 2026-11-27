@@ -3,11 +3,13 @@
 .search-bar__label { font: 600 0.75rem/1 var(--font-head); text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); }
 .search-bar__field { position: relative; display: flex; align-items: center; }
 .search-bar input {
-  flex: 1; min-width: 0; min-height: 44px; padding: 10px 14px; padding-right: 84px;
+  flex: 1; min-width: 0; min-height: 44px; padding: 10px 14px; text-overflow: ellipsis;
   background: var(--surface); color: var(--text); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 4px;
   font: 500 1rem var(--font-body);
 }
-.search-bar input::placeholder { color: var(--muted); }
+.search-bar input::placeholder { color: var(--muted); text-overflow: ellipsis; }
+/* Room for the Clear button only while it's showing, so the placeholder gets the full width. */
+.search-bar__field--clear input { padding-right: 84px; }
 .search-bar input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 .search-bar input::-webkit-search-cancel-button { display: none; }
 .search-bar__clear.btn { position: absolute; right: 6px; min-height: 30px; padding: 5px 10px; font-size: 0.72rem; }

@@ -24,7 +24,7 @@ export default function SearchBar({ id, label, placeholder, query, onChange, fou
   return (
     <div className="search-bar" role="search">
       <label htmlFor={id} className="search-bar__label">{label}</label>
-      <div className="search-bar__field">
+      <div className={`search-bar__field${searching ? ' search-bar__field--clear' : ''}`}>
         <input
           ref={input}
           id={id}

@@ -39,7 +39,7 @@ export default function Tracks() {
         <SearchBar
           id="track-search"
           label="Search tracks"
-          placeholder="Race, circuit, city, country, round or winner"
+          placeholder="Race, place, round or winner"
           query={query}
           onChange={setQuery}
           found={races.length}
