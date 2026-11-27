@@ -1,14 +1,31 @@
+import { useLayoutEffect, useRef, useSyncExternalStore } from 'react';
 import { Link } from 'react-router-dom';
 import { flag } from '../lib/flags.js';
 import Countdown from './Countdown.jsx';
 import './Hero.css';
 
-/** Landing hero: the next race weekend on the left, the Pit Box title on the right. */
+// The race scene only appears on screens at least this wide; below it the hero stacks into one
+// column and there's no room beside the text. Not rendered at all there, so phones don't download the car images.
+const SCENE_QUERY = '(min-width: 761px)';
+const subscribeScene = (cb) => {
+  const mq = window.matchMedia(SCENE_QUERY);
+  mq.addEventListener('change', cb);
+  return () => mq.removeEventListener('change', cb);
+};
+const useShowScene = () => useSyncExternalStore(subscribeScene, () => window.matchMedia(SCENE_QUERY).matches, () => false);
+
+/** Landing hero: the Pit Box title and next race weekend on the left, a photo finish on a diagonal track to the right. */
 export default function Hero({ season, race }) {
+  const heroRef = useRef(null);
+  const gridRef = useRef(null);
+  const showScene = useShowScene();
+  useTrackGeometry(heroRef, gridRef, showScene);
+
   return (
-    <header className="hero">
+    <header className="hero" ref={heroRef}>
       <div className="hero__speed" aria-hidden="true" />
-      <div className="hero__grid">
+      {showScene && <RaceScene />}
+      <div className="hero__grid" ref={gridRef}>
         <div className="hero__main">
           <span className="tag hero__brand">F1 2026 · Unofficial fan site</span>
           {race ? (
@@ -37,7 +54,61 @@ export default function Hero({ season, race }) {
           <p>The one-stop strategy for all things F1</p>
         </div>
       </div>
-      <div className="hero__kerb" aria-hidden="true" />
     </header>
   );
+}
+
+/**
+ * A still photo finish: a strip of track laid out horizontally (kerbs, two lanes, a chequered
+ * finish line, the cars nose to nose), then rotated so it runs from the top edge, just right of
+ * the race details, down to the bottom-right corner.
+ */
+function RaceScene() {
+  return (
+    <div className="hero__scene" aria-hidden="true">
+      <div className="hero__road">
+        <div className="hero__kerb hero__kerb--top" />
+        <div className="hero__lanes">
+          <div className="hero__finish" />
+          <div className="hero__car hero__car--red"><img src="/images/car-top-red.png" alt="" width="240" height="98" /></div>
+          <div className="hero__car hero__car--grey"><img src="/images/car-top.png" alt="" width="240" height="97" /></div>
+        </div>
+        <div className="hero__kerb hero__kerb--bottom" />
+      </div>
+    </div>
+  );
+}
+
+/**
+ * The track's angle depends on the hero's shape, so measure it: where the race details end
+ * (the scene starts just right of them) and the size of the area left over. Sets CSS variables
+ * on the hero: --scene-left (px), --road-angle (deg) and --road-length (px).
+ */
+function useTrackGeometry(heroRef, gridRef, enabled) {
+  useLayoutEffect(() => {
+    const hero = heroRef.current;
+    const grid = gridRef.current;
+    if (!enabled || !hero || !grid || typeof ResizeObserver === 'undefined') return undefined;
+    const update = () => {
+      const h = hero.getBoundingClientRect();
+      // Right edge of the widest piece of text (the title, or a line of race detail). The column
+      // itself stretches wider than its content, so measure what's inside it.
+      const pieces = [...grid.querySelectorAll('.hero__title > *, .hero__main > *')];
+      const contentRight = Math.max(...pieces.map((c) => c.getBoundingClientRect().right));
+      const left = Math.round(contentRight - h.left + 24);
+      const w = h.width - left;
+      const ht = h.height;
+      // The road starts at (20, -100) in the scene (see .hero__road) and ends past the bottom-right corner.
+      const dx = w + 60;
+      const dy = ht + 160;
+      hero.style.setProperty('--scene-left', `${left}px`);
+      hero.style.setProperty('--road-angle', `${(Math.atan2(dy, dx) * 180) / Math.PI}deg`);
+      hero.style.setProperty('--road-length', `${Math.hypot(dx, dy)}px`);
+    };
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(hero);
+    ro.observe(grid);
+    return () => ro.disconnect();
+  }, [heroRef, gridRef, enabled]);
 }
