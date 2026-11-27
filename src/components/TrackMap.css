@@ -2,8 +2,7 @@
 .track-map__base { fill: none; stroke: var(--line); stroke-width: 32; stroke-linejoin: round; stroke-linecap: round; }
 .track-map__line { fill: none; stroke: var(--map-color); stroke-width: 15; stroke-linejoin: round; stroke-linecap: round; }
 .track-map__start { fill: var(--text); }
-.track-map__dot { fill: var(--text); stroke: var(--map-color); stroke-width: 6; }
-.track-map__glow { fill: var(--map-color); opacity: 0.3; }
+.track-map__car image { filter: drop-shadow(0 0 6px rgba(0, 0, 0, 0.6)); }
 .track-map--empty { display: grid; place-items: center; aspect-ratio: 4 / 3; border: 1px dashed var(--line); border-radius: var(--radius); }
 
 /* Pit lane: its own colour, dashed like the painted pit-lane line. */

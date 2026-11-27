@@ -76,7 +76,7 @@ function TrackBody({ season, race }) {
               {circuit.outline.pitSource && circuit.outline.pitSource.year !== circuit.outline.year
                 ? `; pit lane from the ${circuit.outline.pitSource.year} ${circuit.outline.pitSource.session.toLowerCase()}`
                 : ''}
-              ). The dot laps at 4× real pace.
+              ). The car laps at 4× real pace.
             </p>
           )}
         </div>

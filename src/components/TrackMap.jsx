@@ -18,13 +18,30 @@ export function pointAt(points, t) {
 }
 
 /**
+ * Direction of travel at lap fraction t, in degrees (0 = +x, 90 = +y, SVG coordinates).
+ * Looks a little ahead and behind (wrapping past the line) so the car turns smoothly
+ * through corners instead of snapping at each outline point.
+ */
+export function headingAt(points, t, span = 0.01) {
+  const wrap = (v) => ((v % 1) + 1) % 1;
+  const [x0, y0] = pointAt(points, wrap(t - span));
+  const [x1, y1] = pointAt(points, wrap(t + span));
+  return (Math.atan2(y1 - y0, x1 - x0) * 180) / Math.PI;
+}
+
+// Car artwork is drawn nose-left, so it's turned 180° on top of the heading.
+const CAR_SRC = '/images/car-top.png';
+const CAR_LENGTH = 110;
+const CAR_WIDTH = Math.round((CAR_LENGTH * 97) / 240);
+
+/**
  * Circuit outline drawn from real car-position data.
- * - `animated`: the outline draws itself, then a dot laps it at the car's real pace (sped up).
- * - `speedup`: how many times faster than the real lap the dot moves.
+ * - `animated`: the outline draws itself, then a car laps it at the real lap pace (sped up).
+ * - `speedup`: how many times faster than the real lap the car moves.
  */
 export default function TrackMap({ outline, color = 'var(--accent)', animated = true, speedup = 4, label, className = '', legend = false }) {
   const reduce = useReducedMotion();
-  const dot = useRef(null);
+  const car = useRef(null);
   const d = useMemo(() => {
     if (!outline?.points?.length) return '';
     return outline.points.map(([x, y], i) => `${i ? 'L' : 'M'}${x} ${y}`).join(' ') + ' Z';
@@ -44,7 +61,8 @@ export default function TrackMap({ outline, color = 'var(--accent)', animated = 
     const tick = (now) => {
       const t = now < start ? 0 : ((now - start) % lapMs) / lapMs;
       const [x, y] = pointAt(outline.points, t);
-      dot.current?.setAttribute('transform', `translate(${x} ${y})`);
+      const angle = headingAt(outline.points, t) + 180;
+      car.current?.setAttribute('transform', `translate(${x} ${y}) rotate(${angle})`);
       raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
@@ -88,9 +106,8 @@ export default function TrackMap({ outline, color = 'var(--accent)', animated = 
       {/* Start / finish marker */}
       <rect className="track-map__start" x={sx - 6} y={sy - 18} width="12" height="36" rx="2" transform={`rotate(0 ${sx} ${sy})`} />
       {moving && (
-        <g ref={dot} transform={`translate(${sx} ${sy})`}>
-          <circle className="track-map__glow" r="26" />
-          <circle className="track-map__dot" r="13" />
+        <g ref={car} className="track-map__car" transform={`translate(${sx} ${sy}) rotate(${headingAt(outline.points, 0) + 180})`}>
+          <image href={CAR_SRC} x={-CAR_LENGTH / 2} y={-CAR_WIDTH / 2} width={CAR_LENGTH} height={CAR_WIDTH} />
         </g>
       )}
     </svg>
