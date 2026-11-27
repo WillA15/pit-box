@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useSeason, useCircuits } from '../lib/useSeason.js';
@@ -9,6 +10,8 @@ import { useBookmarks } from '../lib/useBookmarks.js';
 import { Loading, LoadError, SourceNote } from '../components/Status.jsx';
 import TrackMap from '../components/TrackMap.jsx';
 import Trophy from '../components/Trophy.jsx';
+import SearchBar, { useSearchQuery } from '../components/SearchBar.jsx';
+import { searchTracks } from '../lib/trackSearch.js';
 import './Tracks.css';
 
 export default function Tracks() {
@@ -16,6 +19,9 @@ export default function Tracks() {
   const { data: circuits } = useCircuits();
   const next = season && nextRace(season.races, getNow());
   const { followLevel } = useBookmarks();
+  const [query, setQuery] = useSearchQuery();
+  const races = useMemo(() => (season ? searchTracks(season.races, season, query) : []), [season, query]);
+  const searching = query.trim() !== '';
   return (
     <section className="page">
       <div className="page-head">
@@ -30,8 +36,20 @@ export default function Tracks() {
       {loading && <Loading />}
       {error && <LoadError error={error} />}
       {season && (
-        <ol className="track-grid">
-          {season.races.map((race, i) => {
+        <SearchBar
+          id="track-search"
+          label="Search tracks"
+          placeholder="Race, circuit, city, country, round or winner"
+          query={query}
+          onChange={setQuery}
+          found={races.length}
+          noun="track"
+        />
+      )}
+      {season && searching && !races.length && <p className="panel muted">No tracks match “{query.trim()}”.</p>}
+      {season && races.length > 0 && (
+        <ol className="track-grid" aria-label="2026 tracks">
+          {races.map((race, i) => {
             const winner = podium(race)[0];
             const c = circuits?.circuits[race.circuitId];
             return (

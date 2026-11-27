@@ -165,3 +165,34 @@ test('following from a row does not open the profile', async ({ page }) => {
   await page.getByRole('button', { name: 'Follow Lando Norris' }).click();
   await expect(page).toHaveURL(/\/tracks\/19$/);
 });
+
+test('search filters the tracks as you type, by place, round or winner', async ({ page }) => {
+  await page.goto('/tracks');
+  const cards = page.getByTestId('track-card');
+  const search = page.getByRole('searchbox', { name: 'Search tracks' });
+  await search.fill('vegas');
+  await expect(cards).toHaveCount(1);
+  await expect(cards.first()).toContainText('Las Vegas Grand Prix');
+  await expect(page.getByText('1 track found')).toBeVisible();
+  // A country shows every race there.
+  await search.fill('usa');
+  await expect(cards).toHaveCount(3);
+  // No match, then Clear brings the whole calendar back and returns focus to the box.
+  await search.fill('zzz');
+  await expect(cards).toHaveCount(0);
+  await expect(page.getByText(/No tracks match/)).toBeVisible();
+  await page.getByRole('button', { name: 'Clear' }).click();
+  await expect(cards).toHaveCount(23);
+  await expect(search).toBeFocused();
+});
+
+test('the track search survives opening a track and going back', async ({ page }) => {
+  await page.goto('/tracks');
+  await page.getByRole('searchbox', { name: 'Search tracks' }).fill('spain');
+  await expect(page.getByTestId('track-card')).toHaveCount(2);
+  await page.getByTestId('track-card').first().click();
+  await expect(page).toHaveURL(/\/tracks\/\d+$/);
+  await page.goBack();
+  await expect(page.getByRole('searchbox', { name: 'Search tracks' })).toHaveValue('spain');
+  await expect(page.getByTestId('track-card')).toHaveCount(2);
+});

@@ -1,0 +1,14 @@
+/* Search bar (Drivers and Tracks pages). */
+.search-bar { display: grid; gap: 6px; margin: 4px 0 16px; max-width: 520px; }
+.search-bar__label { font: 600 0.75rem/1 var(--font-head); text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); }
+.search-bar__field { position: relative; display: flex; align-items: center; }
+.search-bar input {
+  flex: 1; min-width: 0; min-height: 44px; padding: 10px 14px; padding-right: 84px;
+  background: var(--surface); color: var(--text); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 4px;
+  font: 500 1rem var(--font-body);
+}
+.search-bar input::placeholder { color: var(--muted); }
+.search-bar input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.search-bar input::-webkit-search-cancel-button { display: none; }
+.search-bar__clear.btn { position: absolute; right: 6px; min-height: 30px; padding: 5px 10px; font-size: 0.72rem; }
+.search-bar__status { margin: 0; min-height: 1.2em; font-size: 0.82rem; }
