@@ -39,3 +39,11 @@
   .sessions__row { grid-template-columns: 8.5rem 1fr; }
 }
 .podium-chip.is-followed--driver { color: var(--sprint); }
+
+/* "All" view: Upcoming then Completed, each with a View More button. */
+.schedule-section { display: grid; gap: 10px; }
+.schedule-section + .schedule-section { margin-top: 28px; }
+.schedule-section__title { margin: 0; font-size: 1.6rem; font-style: italic; font-weight: 800; }
+.schedule-section__more { display: flex; justify-content: center; margin-top: 4px; }
+/* The race name ("Las Vegas Grand Prix") in full bold; the circuit line below stays regular. */
+.schedule__name strong { font-weight: 700; }
