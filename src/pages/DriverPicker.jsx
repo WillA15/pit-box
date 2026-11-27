@@ -1,6 +1,8 @@
-import { Link } from 'react-router-dom';
+import { useMemo, useRef } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { driverList, nationalityFlag } from '../lib/driverStats.js';
+import { searchDrivers } from '../lib/driverSearch.js';
 import { teamColor, teamShortName } from '../lib/teams.js';
 import { pts } from '../lib/format.js';
 import { useBookmarks } from '../lib/useBookmarks.js';
@@ -9,7 +11,17 @@ import FollowStar from '../components/FollowStar.jsx';
 import './Drivers.css';
 
 export default function DriverPicker({ season }) {
-  const { current, others } = driverList(season);
+  const { current: onGrid, others: earlier } = useMemo(() => driverList(season), [season]);
+  // The search lives in the address (?q=), so Back from a profile returns to the same results.
+  const [params, setParams] = useSearchParams();
+  const query = params.get('q') ?? '';
+  const setQuery = (q) => setParams(q ? { q } : {}, { replace: true });
+  const current = useMemo(() => searchDrivers(onGrid, season, query), [onGrid, season, query]);
+  const others = useMemo(() => searchDrivers(earlier, season, query), [earlier, season, query]);
+  const input = useRef(null);
+  const searching = query.trim() !== '';
+  const found = current.length + others.length;
+
   return (
     <section className="page">
       <div className="page-head">
@@ -17,9 +29,35 @@ export default function DriverPicker({ season }) {
         <SourceNote data={season} />
       </div>
       <p className="muted">Pick a driver for their 2026 season, teammate battle, career numbers and the stories everyone's writing about them.</p>
-      <ol className="driver-grid" aria-label="2026 drivers">
-        {current.map((d, i) => <DriverCard key={d.id} d={d} season={season} i={i} />)}
-      </ol>
+      <div className="driver-search" role="search">
+        <label htmlFor="driver-search" className="driver-search__label">Search drivers</label>
+        <div className="driver-search__field">
+          <input
+            ref={input}
+            id="driver-search"
+            type="search"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            onKeyDown={(e) => e.key === 'Escape' && setQuery('')}
+            placeholder="Name, team, number or code"
+            autoComplete="off"
+            spellCheck="false"
+            aria-describedby="driver-search-status"
+          />
+          {searching && (
+            <button type="button" className="btn btn--primary btn--sm driver-search__clear" onClick={() => { setQuery(''); input.current?.focus(); }}>Clear</button>
+          )}
+        </div>
+        <p id="driver-search-status" className="muted driver-search__status" aria-live="polite">
+          {searching ? (found ? `${found} driver${found === 1 ? '' : 's'} found` : '') : ''}
+        </p>
+      </div>
+      {searching && !found && <p className="panel muted">No drivers match “{query.trim()}”.</p>}
+      {current.length > 0 && (
+        <ol className="driver-grid" aria-label="2026 drivers">
+          {current.map((d, i) => <DriverCard key={d.id} d={d} season={season} i={i} />)}
+        </ol>
+      )}
       {others.length > 0 && (
         <>
           <h2>Also raced in 2026</h2>

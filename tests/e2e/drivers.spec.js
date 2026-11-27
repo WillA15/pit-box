@@ -93,3 +93,36 @@ test('every driver profile has both follow buttons', async ({ page }) => {
     await expect(page.getByRole('button', { name: `Follow ${d.givenName} ${d.familyName}` })).toBeVisible();
   }
 });
+
+test('search filters the drivers as you type, by name or team', async ({ page }) => {
+  await page.goto('/drivers');
+  const cards = page.getByTestId('driver-card');
+  const search = page.getByRole('searchbox', { name: 'Search drivers' });
+  await search.fill('ver');
+  await expect(cards.first()).toContainText(/Verstappen/i);
+  await expect(cards.filter({ hasText: /Norris/i })).toHaveCount(0);
+  // A team name shows that team's drivers.
+  await search.fill('ferr');
+  await expect(cards).toHaveCount(2);
+  await expect(cards.filter({ hasText: /Hamilton/i })).toHaveCount(1);
+  await expect(cards.filter({ hasText: /Leclerc/i })).toHaveCount(1);
+  await expect(page.getByText('2 drivers found')).toBeVisible();
+  // No match, then Clear brings the full grid back.
+  await search.fill('zzz');
+  await expect(cards).toHaveCount(0);
+  await expect(page.getByText(/No drivers match/)).toBeVisible();
+  await page.getByRole('button', { name: 'Clear' }).click();
+  await expect.poll(() => cards.count()).toBeGreaterThanOrEqual(22);
+  await expect(search).toHaveValue('');
+  await expect(search).toBeFocused();
+});
+
+test('the search survives opening a profile and going back', async ({ page }) => {
+  await page.goto('/drivers');
+  await page.getByRole('searchbox', { name: 'Search drivers' }).fill('mclaren');
+  await page.getByTestId('driver-card').filter({ hasText: /Piastri/i }).click();
+  await expect(page).toHaveURL(/\/drivers\/piastri$/);
+  await page.goBack();
+  await expect(page.getByRole('searchbox', { name: 'Search drivers' })).toHaveValue('mclaren');
+  await expect(page.getByTestId('driver-card')).toHaveCount(2);
+});
