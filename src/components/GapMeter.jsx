@@ -1,4 +1,5 @@
 import { useId } from 'react';
+import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { teamColor } from '../lib/teams.js';
 import { pts } from '../lib/format.js';
@@ -10,7 +11,7 @@ import './GapMeter.css';
  * extension showing the most they could finish on. If the extension can't reach the leader's
  * marker, they're out of the fight.
  */
-export default function GapMeter({ fight, nameOf, colorOf, title, raceName }) {
+export default function GapMeter({ fight, nameOf, colorOf, title, raceName, link = null }) {
   const headingId = useId();
   if (!fight) return null;
   const scaleMax = Math.max(fight.leader.points, ...fight.rivals.map((r) => r.maxPossible)) * 1.04;
@@ -19,7 +20,10 @@ export default function GapMeter({ fight, nameOf, colorOf, title, raceName }) {
   return (
     <section className="panel gap-meter" aria-labelledby={headingId}>
       <div className="gap-meter__head">
-        <h2 id={headingId}>{title}</h2>
+        <div className="gap-meter__title">
+          <h2 id={headingId}>{title}</h2>
+          {link && <Link className="btn btn--primary btn--sm gap-meter__link" to={link.to}>{link.label}</Link>}
+        </div>
         {fight.decided ? (
           <span className="gap-meter__status is-decided">
             <Trophy title="Champion decided" size={18} /> Decided at {raceName(fight.clinchRound)}
