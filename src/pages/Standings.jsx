@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, useMemo, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { useSeason } from '../lib/useSeason.js';
 import { useBookmarks } from '../lib/useBookmarks.js';
@@ -57,7 +57,10 @@ function StandingsBody({ season }) {
     () => ({ drivers: championClinch(history, season.races, 'drivers'), constructors: championClinch(history, season.races, 'constructors') }),
     [history, season.races],
   );
-  const [kind, setKind] = useState('drivers');
+  // ?view=constructors opens the constructors table (the home page's Constructors' title button links here).
+  const [params, setParams] = useSearchParams();
+  const kind = params.get('view') === 'constructors' ? 'constructors' : 'drivers';
+  const setKind = (k) => setParams(k === 'constructors' ? { view: 'constructors' } : {}, { replace: true });
   const [onlyFollowed, setOnlyFollowed] = useState(false);
   const reduceMotion = useReducedMotion();
   // t is a fractional index into history.rounds: 3.5 = halfway between the 4th and 5th rounds.

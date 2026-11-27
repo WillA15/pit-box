@@ -48,8 +48,8 @@ function LandingBody({ season }) {
       <Hero season={season} race={next} />
 
       <div className="landing__fights">
-        <GapMeter fight={drivers} title="Drivers' title" link={{ to: '/drivers', label: 'Drivers' }} nameOf={driverName(season)} colorOf={driverColor(season)} raceName={raceName} />
-        <GapMeter fight={teams} title="Constructors' title" nameOf={(id) => teamShortName(id, season.constructors[id]?.name)} colorOf={teamColor} raceName={raceName} />
+        <GapMeter fight={drivers} title="Drivers' title" link={{ to: '/standings', label: 'Standings' }} nameOf={driverName(season)} colorOf={driverColor(season)} raceName={raceName} />
+        <GapMeter fight={teams} title="Constructors' title" link={{ to: '/standings?view=constructors', label: 'Standings' }} nameOf={(id) => teamShortName(id, season.constructors[id]?.name)} colorOf={teamColor} raceName={raceName} />
         {latest && <Podium season={season} race={latest} championId={champions.drivers} />}
       </div>
 
