@@ -205,13 +205,14 @@ function DriverCard({ s, season, i }) {
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ delay: i * 0.06 }}
-      className="pw-card pw-card--roomy"
+      className="pw-card pw-card--roomy pw-card--link"
       style={{ '--team': color }}
       data-testid="pw-driver"
     >
       <header className="pw-card__head">
         <div>
-          <Link to={`/drivers/${s.id}`} className="pw-card__name">{name}</Link>
+          {/* Stretched to cover the whole card (see .pw-card__name--card), so a click anywhere opens the profile. */}
+          <Link to={`/drivers/${s.id}`} className="pw-card__name pw-card__name--card">{name}</Link>
           <small className="muted">{teamShortName(d.constructorId, season.constructors[d.constructorId]?.name)}</small>
         </div>
         <FollowStar kind="drivers" id={s.id} label={name} />

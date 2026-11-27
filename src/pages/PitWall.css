@@ -59,3 +59,10 @@ a.pw-card__name:hover { color: var(--accent-text); }
 .pw-cars li { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
 .pw-cars__text { min-width: 0; }
 .pw-cars__link.btn { min-height: 30px; padding: 5px 9px; font-size: 0.7rem; letter-spacing: 0.04em; white-space: nowrap; }
+/* Driver cards: the name link stretches over the whole card; the follow star sits above it. */
+.pw-card--link { position: relative; cursor: pointer; }
+.pw-card__name--card::after { content: ''; position: absolute; inset: 0; border-radius: var(--radius); z-index: 1; }
+.pw-card--link .follow-star, .pw-card--link button { position: relative; z-index: 2; }
+.pw-card--link:hover .pw-card__name { color: var(--accent-text); }
+.pw-card--link:has(.pw-card__name--card:focus-visible) { outline: 2px solid var(--accent); outline-offset: 2px; }
+.pw-card__name--card:focus-visible { outline: none; }

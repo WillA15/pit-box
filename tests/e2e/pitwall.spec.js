@@ -85,3 +85,17 @@ test('follows are highlighted on other pages, and teams can be followed from a p
   await page.goto('/schedule');
   await expect(page.locator('.podium-chip.is-followed').first()).toBeVisible();
 });
+
+test('clicking anywhere on a driver card opens that driver, but the star still just unfollows', async ({ page }) => {
+  await follow(page, ['antonelli', 'hamilton']);
+  await page.goto('/pit-wall');
+  const card = page.getByTestId('pw-driver').filter({ hasText: 'Hamilton' });
+  await card.locator('.follow-star').click();
+  await expect(page).toHaveURL(/\/pit-wall$/);
+  await expect(page.getByTestId('pw-driver')).toHaveCount(1);
+  // Click the Recent Placements row, well away from the name.
+  // The card's link covers it, so click by position (as a user would) rather than on the list element.
+  const box = await page.getByTestId('pw-driver').getByLabel('Last five results').boundingBox();
+  await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
+  await expect(page).toHaveURL(/\/drivers\/antonelli$/);
+});
